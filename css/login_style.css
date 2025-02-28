@@ -1,0 +1,31 @@
+body {
+    font-family: Georgia, serif !important;
+    margin: 20px !important; 
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #F2F2F2; 
+    margin-top: 20px; 
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #7FBFB0; 
+    color: white;
+}
+
+.hd-h3 {
+    font-family: Georgia, serif !important;
+    padding-top: 20px !important;
+}
+
+.form-fm, .submit, .para-p {
+    margin-top: 10px !important;
+}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <style>
+        body {
+            font-family: Georgia, serif !important;
+            margin: 20px !important;
+        }
+
+        .hd-h3 {
+            font-family: Georgia, serif !important;
+            padding-top: 20px !important;
+            color: black !important; 
+            font-size: 20px; 
+            text-align: center; 
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #F2F2F2;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        
+        td div {
+            color: black !important; 
+            font-size: 16px; 
+            font-weight: bold; 
+        }
+
+        th {
+            background-color: #7FBFB0;
+            color: white;
+        }
+
+        .form-fm, .submit, .para-p {
+            margin-top: 10px !important;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .register-link {
+            display: block; 
+            margin-top: 10px; 
+            font-size: 14px;
+            text-decoration: none; 
+            color: blue; 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <div style="margin:0 auto;text-align:center;display:inline">
+
+        <h3 class="hd-h3">Please Login to System</h3>
+        
+        <p id="loginMessage" class="para-p"></p>
+
+        <form id="loginForm">
+            <table style="display:inline">
+                <tr>
+                    <td><div align="right"><font face="Arial, Helvetica, sans-serif" size="2">Username:</font></div></td>
+                    <td><input type="text" id="username" size="10" maxlength="10" required></td>
+                </tr>
+                <tr>
+                    <td><div align="right"><font face="Arial, Helvetica, sans-serif" size="2">Password:</font></div></td>
+                    <td><input type="password" id="password" size="10" maxlength="10" required></td>
+                </tr>
+            </table>
+            <br/>
+            <input class="submit" type="submit" value="Login">
+        </form>
+
+        <p><a href="register.html" class="register-link">Create new account</a></p>
+
+        <p id="errorMessage" class="error-message"></p>
+
+    </div>
+
+    <script>
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header").innerHTML = data;
+            })
+            .catch(error => console.error("Error loading header:", error));
+    </script>
+
+    <script src="script/login.js"> </script>
+
+    <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let enteredUsername = document.getElementById("username").value.trim();
+        let enteredPassword = document.getElementById("password").value.trim();
+
+        // Retrieve stored credentials
+        let storedUsername = localStorage.getItem("user_username");
+        let storedPassword = localStorage.getItem("user_password");
+
+        if (enteredUsername === storedUsername && enteredPassword === storedPassword) {
+            localStorage.setItem("loggedInUser", enteredUsername); // Store logged-in user
+            window.location.href = "shop.html"; // Redirect to homepage
+    } else {
+        document.getElementById("errorMessage").textContent = "Invalid username or password.";
+        document.getElementById("errorMessage").style.display = "block";
+    }
+});
+
+    </script>
+    
+
+</body>
+</html>
