@@ -56,6 +56,14 @@
             width: 200px;
         }
 
+        
+        .product-info {
+            margin-bottom: 10px; /* Add margin between the table and the element below */
+        }
+        .cart-section {
+            margin-bottom: 10px; /* Add margin between the cart section and the element below */
+        }
+
         .add-to-cart {
             background-color: #638AB4;
             color: #FFFFFF;
@@ -63,45 +71,79 @@
             padding: 10px;
             cursor: pointer;
         }
-
         .add-to-cart:hover {
             background-color: #5078A1;
         }
+
+        /* Adjust spacing and layout for the review submission form. */
+        .review-form {
+            margin-top: 20px;  /* Top margin for the entire form */
+            margin-bottom: 20px; /* Bottom margin for the entire form */
+        }
+        
+        /* Make form labels block-level (except the Rate row, which is handled by flexbox) */
+        .review-form label {
+            display: block;      /* Convert the label to a block element */
+            margin-bottom: 5px;  /* Add margin between the label and the input field */
+        }
+                
+        /*  Rate row is arranged horizontally (flexbox) */
+        .form-row {
+            display: flex;
+            align-items: center; 
+            gap: 10px;           /* Set spacing between elements  */
+            margin-bottom: 10px;
+        }
+
+        /* Set the Rate input field individually (width may be unnecessary due to horizontal layout) */
+        #reviewRate {
+            width: 60px;
+            padding: 5px;
+        }
+        
+        /* Comment textarea's style */
+        #reviewComment {
+            width: 50%;           /* 50% of the form */
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        
+        /* Submit Button's margin */
+        .review-form button {
+            margin-top: 10px;    /* Add top margin to the button */
+            padding: 8px 16px;   /* Add padding inside the button */
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- ヘッダー部分（必要なら header.html を動的に読み込むなど） -->
+    <!-- Header section (dynamically load header.html if needed) -->
     <div id="header">
-        <!-- ここに共通のヘッダー内容を挿入 -->
+        <!-- Insert common header content here -->
         <h1>Meruzon</h1>
         <nav>
             <a href="listprod.html">Begin Shopping (backとかのがいいかも) (場所も調整する)</a>
-            <!-- その他のナビゲーションリンク -->
+            <!-- other navigation links -->
         </nav>
     </div>
 
-    <!-- メインコンテンツ -->
+    <!-- Main content -->
     <main>
-        <!-- 商品詳細セクション -->
+        <!-- Product details section -->
         <section class="product-detail">
-            <!-- 商品名 -->
+            <!-- Product name -->
             <h2 id="productName">Product Name</h2>
 
-            <!-- 商品の説明 -->
+            <!-- Product description -->
             <!-- <p id="productDescription">This is the product description. It provides details about the handmade product.</p> -->
             <p><strong>Description:</strong> <span id="productDescription">This is the product description. It provides details about the handmade product.</span></p>
 
-
-
-            <!-- 大きな商品の画像 -->
+            <!-- Product Image -->
             <img id="productImage" src="img/sample.jpg" alt="Product Image" style="max-width:300px;" class="img">
             
-            <!-- 商品ID と価格 -->
-            <!-- <p>ID: <span id="productId">1</span></p>
-            <p>Price: $<span id="productPrice">30.00</span></p> -->
-
-            <table>
+            <!-- Product ID & Price (Table) -->
+            <table class="product-info">
                 <tr>
                     <th>Id</th>
                     <td><span id="productId">xx</span></td>
@@ -112,22 +154,21 @@
                 </tr>
             </table>  
             
-            <!-- 数量選択と Add to Cart ボタン -->
+            <!-- Quantity choice & Add to Cart Button -->
             <div class="cart-section">
                 <label for="quantity">Quantity:</label>
                 <input type="number" id="quantity" value="1" min="1">
                 <button class="add-to-cart" id="addToCartBtn">Add to Cart</button>
             </div>
             
-            <!-- Continue Shopping ボタン -->
-            <!-- <button id="continueShoppingBtn">Continue Shopping</button> -->
+            <!-- Continue Shopping  (Text link) -->
             <p id="continueShopping">
                 <a href="listprod.html">Continue Shopping</a>
             </p>
             
         </section>
         
-        <!-- レビュー表示セクション -->
+        <!-- Reviews section -->
         <section class="review-list">
             <h3>Reviews</h3>
             <table>
@@ -139,21 +180,31 @@
                     </tr>
                 </thead>
                 <tbody id="reviewTable">
-                    <!-- レビューはJavaScriptで動的に挿入 -->
+                    <!-- Reviews are dynamically inserted via JavaScript -->
                 </tbody>
             </table>
         </section>
         
-        <!-- レビュー投稿フォーム -->
+        <!-- Add Review  Text link -->
+        <!-- <p id="addReview">
+            <a href="review.html">Add Review</a>
+        </p> -->
+
+        <!-- Add Review form -->
         <section class="review-form">
             <h3>Add Review</h3>
             <form id="reviewForm">
-                <label for="reviewRate">Rate (1-5):</label>
-                <input type="number" id="reviewRate" min="1" max="5" required>
-                <br>
+                <!-- Review Rate(1-5) -->                
+                <!-- Rate row: arranged horizontally with flexbox -->
+                <div class="form-row">
+                    <label for="reviewRate">Rate (1-5):</label>
+                    <input type="number" id="reviewRate" min="1" max="5" required>
+                </div>
+                <!-- Review Comment: arranged vertically -->
                 <label for="reviewComment">Comment:</label>
                 <textarea id="reviewComment" required></textarea>
                 <br>
+                <!-- Submit Button -->
                 <button type="submit">Submit Review</button>
             </form>
         </section>
@@ -161,7 +212,7 @@
 
     <script>
         // ============================
-        // サンプル用のダミーデータ
+        // Sample Dummy Data
         // ============================
         const product = {
             id: 1,
@@ -177,31 +228,25 @@
         ];
 
         // ============================
-        // ページ読み込み時の初期設定
+        // Initial setup on page load
         // ============================
         window.onload = function() {
-            // 商品情報の表示
+            // Display product info
             document.getElementById("productName").textContent = product.name;
             document.getElementById("productId").textContent = product.id;
             document.getElementById("productPrice").textContent = product.price.toFixed(2);
             document.getElementById("productDescription").textContent = product.description;
             document.getElementById("productImage").src = product.image;
             
-            // レビュー一覧の表示
+            // Display review list
             displayReviews();
             
-            // イベントリスナーの設定
+            // Set up event listeners
             document.getElementById("addToCartBtn").addEventListener("click", function() {
                 const quantity = parseInt(document.getElementById("quantity").value) || 1;
                 alert(`Added ${quantity} of "${product.name}" to cart!`);
-                // ここでlocalStorageなどへの保存処理に発展可能
             });
             
-            /*
-            document.getElementById("continueShoppingBtn").addEventListener("click", function() {
-                window.location.href = "listprod.html";
-            });
-            */
             
             document.getElementById("reviewForm").addEventListener("submit", function(event) {
                 event.preventDefault();
@@ -210,11 +255,11 @@
         };
 
         // ============================
-        // レビュー表示用関数
+        // display Reviews function
         // ============================
         function displayReviews() {
             const reviewTable = document.getElementById("reviewTable");
-            reviewTable.innerHTML = "";  // 既存の内容をクリア
+            reviewTable.innerHTML = "";  // Clear existing content
             
             reviews.forEach(review => {
                 const row = document.createElement("tr");
@@ -224,7 +269,7 @@
         }
 
         // ============================
-        // レビュー追加用関数
+        // Add Review function
         // ============================
         function addReview() {
             const rate = parseInt(document.getElementById("reviewRate").value);
