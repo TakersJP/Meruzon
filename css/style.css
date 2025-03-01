@@ -34,26 +34,37 @@ header {
     height: 100px;
     color: white;
     display: flex;
-    align-items: center; 
-    justify-content: space-between; 
-    text-align: center;
+    align-items: center;
+    justify-content: space-between; /* Ensures space between logo and nav */
 }
+
+header h1 {
+    font-family: cursive, sans-serif;
+    color: #3399FF;
+    flex-grow: 1; /* Allows it to take up available space */
+    text-align: center; /* Ensures text is centered */
+}
+
 
 header img {
     max-width: 100%;
     height: auto;
     max-height: 100px;
-    margin-right: 20px;
+    margin-left: 20px; /* Align logo to the left */
 }
 
 nav {
     display: flex;
-    justify-content: center;
+    align-items: center; /* Ensures all items in nav are aligned */
+    justify-content: flex-end; /* Push nav links to the right */
+    gap: 15px; /* Space between nav items */
 }
 
-nav a {
+nav a, #userLoginSection {
     color: white;
     text-decoration: none;
     padding: 10px;
     margin: 0 10px;
+    display: flex;
+    align-items: center;
 }

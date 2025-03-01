@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Shopping Cart</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 
     <style>
         body {
@@ -154,13 +155,27 @@
             loadCart();
         });
 
-        // Load header dynamically
         fetch("header.html")
             .then(response => response.text())
             .then(data => {
-                document.getElementById("header").innerHTML = data;
-            })
-            .catch(error => console.error("Error loading header:", error));
+            document.getElementById("header").innerHTML = data;
+
+            // After header is loaded, check if user is logged in
+            let loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                document.getElementById("userLoginSection").innerHTML = `
+                    <span>Signed in as: <b>${loggedInUser}</b> | 
+                    <a href="#" id="logoutButton">Logout</a></span>
+                `;
+
+                // Logout functionality
+                document.getElementById("logoutButton").addEventListener("click", function() {
+                    localStorage.removeItem("loggedInUser");
+                    window.location.href = "login.html"; // Redirect to login page
+                });
+            }
+        })
+        .catch(error => console.error("Error loading header:", error));
     </script>
 
 </body>

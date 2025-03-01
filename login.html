@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+
+
     <title>Login Screen</title>
     <style>
         body {
@@ -96,31 +99,46 @@
         fetch("header.html")
             .then(response => response.text())
             .then(data => {
-                document.getElementById("header").innerHTML = data;
-            })
-            .catch(error => console.error("Error loading header:", error));
+            document.getElementById("header").innerHTML = data;
+
+            // After header is loaded, check if user is logged in
+            let loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                document.getElementById("userLoginSection").innerHTML = `
+                    <span>Signed in as: <b>${loggedInUser}</b> | 
+                    <a href="#" id="logoutButton">Logout</a></span>
+                `;
+
+                // Logout functionality
+                document.getElementById("logoutButton").addEventListener("click", function() {
+                    localStorage.removeItem("loggedInUser");
+                    window.location.href = "login.html"; // Redirect to login page
+                });
+            }
+        })
+        .catch(error => console.error("Error loading header:", error));
     </script>
 
     <script src="script/login.js"> </script>
 
     <script>
     document.getElementById("loginForm").addEventListener("submit", function(event) {
-        event.preventDefault();
+    event.preventDefault();
 
-        let enteredUsername = document.getElementById("username").value.trim();
-        let enteredPassword = document.getElementById("password").value.trim();
+    let enteredUsername = document.getElementById("username").value.trim();
+    let enteredPassword = document.getElementById("password").value.trim();
 
-        // Retrieve stored credentials
-        let storedUsername = localStorage.getItem("user_username");
-        let storedPassword = localStorage.getItem("user_password");
+    // Retrieve stored credentials
+    let storedUsername = localStorage.getItem("user_username");
+    let storedPassword = localStorage.getItem("user_password");
 
-        if (enteredUsername === storedUsername && enteredPassword === storedPassword) {
-            localStorage.setItem("loggedInUser", enteredUsername); 
-            window.location.href = "shop.html"; 
-        } else {
-            document.getElementById("errorMessage").textContent = "Invalid username or password.";
-            document.getElementById("errorMessage").style.display = "block";
-        }
+    if (enteredUsername === storedUsername && enteredPassword === storedPassword) {
+        localStorage.setItem("loggedInUser", enteredUsername); 
+        window.location.href = "shop.html"; 
+    } else {
+        document.getElementById("errorMessage").textContent = "Invalid username or password.";
+        document.getElementById("errorMessage").style.display = "block";
+    }
 });
 
     </script>

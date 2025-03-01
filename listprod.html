@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
     <title>Meruzon</title>
 
     <style>
@@ -10,6 +11,11 @@
             font-family: Georgia, serif !important;
             margin: 20px !important;
         }
+
+        h1, h3, label, p {
+            color: black;
+        }
+
 
         table {
             font-family: Georgia, serif !important;
@@ -173,9 +179,24 @@
         fetch("header.html")
             .then(response => response.text())
             .then(data => {
-                document.getElementById("header").innerHTML = data;
-            })
-            .catch(error => console.error("Error loading header:", error));
+            document.getElementById("header").innerHTML = data;
+
+            // After header is loaded, check if user is logged in
+            let loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                document.getElementById("userLoginSection").innerHTML = `
+                    <span>Signed in as: <b>${loggedInUser}</b> | 
+                    <a href="#" id="logoutButton">Logout</a></span>
+                `;
+
+                // Logout functionality
+                document.getElementById("logoutButton").addEventListener("click", function() {
+                    localStorage.removeItem("loggedInUser");
+                    window.location.href = "login.html"; // Redirect to login page
+                });
+            }
+        })
+        .catch(error => console.error("Error loading header:", error));
     </script>
 
 </body>
