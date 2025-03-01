@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meruzon</title>
+
+    <style>
+        body {
+            font-family: Georgia, serif !important;
+            margin: 20px !important;
+        }
+
+        table {
+            font-family: Georgia, serif !important;
+            font-size: 20px !important;
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #F2F2F2;
+            margin-top: 20px;
+            color: black;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #7FBFB0;
+            color: white;
+        }
+
+        .form-fm {
+            padding-top: 20px !important;
+            padding-left: 10px !important;
+        }
+
+        .col-md-1 {
+            width: 150px;
+        }
+
+        .img {
+            max-height: 200px;
+        }
+
+        .category-select {
+            font-size: 16px;
+            padding: 5px;
+        }
+
+        .search-box {
+            font-size: 16px;
+            padding: 5px;
+            width: 200px;
+        }
+
+        
+        .product-info {
+            margin-bottom: 10px; /* Add margin between the table and the element below */
+        }
+        .cart-section {
+            margin-bottom: 10px; /* Add margin between the cart section and the element below */
+        }
+
+        .add-to-cart {
+            background-color: #638AB4;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .add-to-cart:hover {
+            background-color: #5078A1;
+        }
+
+        /* Adjust spacing and layout for the review submission form. */
+        .review-form {
+            margin-top: 20px;  /* Top margin for the entire form */
+            margin-bottom: 20px; /* Bottom margin for the entire form */
+        }
+        
+        /* Make form labels block-level (except the Rate row, which is handled by flexbox) */
+        .review-form label {
+            display: block;      /* Convert the label to a block element */
+            margin-bottom: 5px;  /* Add margin between the label and the input field */
+        }
+                
+        /*  Rate row is arranged horizontally (flexbox) */
+        .form-row {
+            display: flex;
+            align-items: center; 
+            gap: 10px;           /* Set spacing between elements  */
+            margin-bottom: 10px;
+        }
+
+        /* Set the Rate input field individually (width may be unnecessary due to horizontal layout) */
+        #reviewRate {
+            width: 60px;
+            padding: 5px;
+        }
+        
+        /* Comment textarea's style */
+        #reviewComment {
+            width: 50%;           /* 50% of the form */
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        
+        /* Submit Button's margin */
+        .review-form button {
+            margin-top: 10px;    /* Add top margin to the button */
+            padding: 8px 16px;   /* Add padding inside the button */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header section (dynamically load header.html if needed) -->
+    <div id="header">
+        <!-- Insert common header content here -->
+        <h1>Meruzon</h1>
+        <nav>
+            <a href="listprod.html">Begin Shopping (backとかのがいいかも) (場所も調整する)</a>
+            <!-- other navigation links -->
+        </nav>
+    </div>
+
+    <!-- Main content -->
+    <main>
+        <!-- Product details section -->
+        <section class="product-detail">
+            <!-- Product name -->
+            <h2 id="productName">Product Name</h2>
+
+            <!-- Product description -->
+            <!-- <p id="productDescription">This is the product description. It provides details about the handmade product.</p> -->
+            <p><strong>Description:</strong> <span id="productDescription">This is the product description. It provides details about the handmade product.</span></p>
+
+            <!-- Product Image -->
+            <img id="productImage" src="img/sample.jpg" alt="Product Image" style="max-width:300px;" class="img">
+            
+            <!-- Product ID & Price (Table) -->
+            <table class="product-info">
+                <tr>
+                    <th>Id</th>
+                    <td><span id="productId">xx</span></td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td>$<span id="productPrice">xx.xx</span></td>
+                </tr>
+            </table>  
+            
+            <!-- Quantity choice & Add to Cart Button -->
+            <div class="cart-section">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" value="1" min="1">
+                <button class="add-to-cart" id="addToCartBtn">Add to Cart</button>
+            </div>
+            
+            <!-- Continue Shopping  (Text link) -->
+            <p id="continueShopping">
+                <a href="listprod.html">Continue Shopping</a>
+            </p>
+            
+        </section>
+        
+        <!-- Reviews section -->
+        <section class="review-list">
+            <h3>Reviews</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rate</th>
+                        <th>Date</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody id="reviewTable">
+                    <!-- Reviews are dynamically inserted via JavaScript -->
+                </tbody>
+            </table>
+        </section>
+        
+        <!-- Add Review  Text link -->
+        <!-- <p id="addReview">
+            <a href="review.html">Add Review</a>
+        </p> -->
+
+        <!-- Add Review form -->
+        <section class="review-form">
+            <h3>Add Review</h3>
+            <form id="reviewForm">
+                <!-- Review Rate(1-5) -->                
+                <!-- Rate row: arranged horizontally with flexbox -->
+                <div class="form-row">
+                    <label for="reviewRate">Rate (1-5):</label>
+                    <input type="number" id="reviewRate" min="1" max="5" required>
+                </div>
+                <!-- Review Comment: arranged vertically -->
+                <label for="reviewComment">Comment:</label>
+                <textarea id="reviewComment" required></textarea>
+                <br>
+                <!-- Submit Button -->
+                <button type="submit">Submit Review</button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        // ============================
+        // Sample Dummy Data
+        // ============================
+        const product = {
+            id: 1,
+            name: "Handmade Beaded Earrings",
+            description: "Beautiful handmade earrings made with high quality beads. A perfect accessory to brighten your outfit.",
+            price: 15.00,
+            image: "img/earrings.jpg"
+        };
+
+        let reviews = [
+            { rate: 4, date: "2024-12-06 02:11:29.46", comment: "Really nice product!" },
+            { rate: 5, date: "2024-12-07 10:05:12.00", comment: "Absolutely loved it!" }
+        ];
+
+        // ============================
+        // Initial setup on page load
+        // ============================
+        window.onload = function() {
+            // Display product info
+            document.getElementById("productName").textContent = product.name;
+            document.getElementById("productId").textContent = product.id;
+            document.getElementById("productPrice").textContent = product.price.toFixed(2);
+            document.getElementById("productDescription").textContent = product.description;
+            document.getElementById("productImage").src = product.image;
+            
+            // Display review list
+            displayReviews();
+            
+            // Set up event listeners
+            document.getElementById("addToCartBtn").addEventListener("click", function() {
+                const quantity = parseInt(document.getElementById("quantity").value) || 1;
+                alert(`Added ${quantity} of "${product.name}" to cart!`);
+            });
+            
+            
+            document.getElementById("reviewForm").addEventListener("submit", function(event) {
+                event.preventDefault();
+                addReview();
+            });
+        };
+
+        // ============================
+        // display Reviews function
+        // ============================
+        function displayReviews() {
+            const reviewTable = document.getElementById("reviewTable");
+            reviewTable.innerHTML = "";  // Clear existing content
+            
+            reviews.forEach(review => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${review.rate}</td><td>${review.date}</td><td>${review.comment}</td>`;
+                reviewTable.appendChild(row);
+            });
+        }
+
+        // ============================
+        // Add Review function
+        // ============================
+        function addReview() {
+            const rate = parseInt(document.getElementById("reviewRate").value);
+            const comment = document.getElementById("reviewComment").value;
+            const now = new Date();
+            const formattedDate = now.toISOString().slice(0, 19).replace("T", " ");
+            reviews.push({ rate: rate, date: formattedDate, comment: comment });
+            displayReviews();
+            document.getElementById("reviewForm").reset();
+        }
+    </script>
+
+</body>
+</html>

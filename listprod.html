@@ -83,12 +83,13 @@
 
     <form class="form-fm" onsubmit="event.preventDefault(); filterProducts();">
         <p align="left">
-            <select id="categoryFilter" class="category-select">
+            <select id="categoryFilter" class="category-select" onchange="filterProducts()">
                 <option value="All">All</option>
-                <option value="Mangas">Mangas</option>
-                <option value="Video Games">Video Games</option>
-                <option value="TCGs">TCGs</option>
-                <option value="Figures">Figures</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Lifestyle Goods">Lifestyle Goods</option>
+                <option value="Ceramics & Glass Crafts">Ceramics & Glass Crafts</option>
+                <option value="Knitted Goods">Knitted Goods</option>
+                <option value="Craft Supplies & Tools">Craft Supplies & Tools</option>
             </select>
 
             <input type="text" id="productSearch" class="search-box" placeholder="Search product name">
@@ -114,11 +115,25 @@
 
     <script>
         const products = [
-            { id: 1, name: "Attack on Titan Vol. 1", price: 9.99, category: "Mangas", image: "img/aot.jpg" },
-            { id: 2, name: "Elden Ring", price: 59.99, category: "Video Games", image: "img/eldenring.jpg" },
-            { id: 3, name: "Pokémon TCG Booster Pack", price: 4.99, category: "TCGs", image: "img/pokemon.jpg" },
-            { id: 4, name: "Naruto Uzumaki Figure", price: 29.99, category: "Figures", image: "img/naruto.jpg" },
-            { id: 5, name: "Chainsaw Man Vol. 1", price: 10.99, category: "Mangas", image: "img/chainsawman.jpg" }
+            { id: 1,  name: "Handmade Beaded Earrings", price: 15.00, category: "Accessories",              image: "img/earrings.jpg" },
+            { id: 2,  name: "Leather Bracelet",         price: 18.00, category: "Accessories",              image: "img/bracelet.jpg" },
+            { id: 3,  name: "Resin Pendant Necklace",   price: 22.00, category: "Accessories",              image: "img/pendant.jpg" },
+
+            { id: 4,  name: "Minimalist Tote Bag",      price: 25.00, category: "Lifestyle Goods",          image: "img/totebag.jpg" },
+            { id: 5,  name: "Scented  Candle",          price: 12.00, category: "Lifestyle Goods",          image: "img/candle.jpg" },
+            { id: 6,  name: "Wooden Coaster Set",       price: 20.00, category: "Lifestyle Goods",          image: "img/coasters.jpg" },
+
+            { id: 7,  name: "Ceramic Coffee Mug",       price: 18.00, category: "Ceramics & Glass Crafts",  image: "img/coffeemug.jpg" },
+            { id: 8,  name: "Glass Vase",               price: 40.00, category: "Ceramics & Glass Crafts",  image: "img/vase.jpg" },
+            { id: 9,  name: "Hand-Painted Plate",       price: 35.00, category: "Ceramics & Glass Crafts",  image: "img/plate.jpg" },
+
+            { id: 10, name: "Knitted Scarf",            price: 30.00, category: "Knitted Goods",            image: "img/scarf.jpg" },
+            { id: 11, name: "Wool Mittens",             price: 20.00, category: "Knitted Goods",            image: "img/mittens.jpg" },
+            { id: 12, name: "Crocheted Beanie",         price: 28.00, category: "Knitted Goods",            image: "img/beanie.jpg" },
+
+            { id: 13, name: "DIY Beading Kit",          price: 12.00, category: "Craft Supplies & Tools",   image: "img/beadingkit.jpg" },
+            { id: 14, name: "Embroidery Starter Set",   price: 15.00, category: "Craft Supplies & Tools",   image: "img/embroidery.jpg" },
+            { id: 15, name: "Basic Sewing Kit",         price: 10.00, category: "Craft Supplies & Tools",   image: "img/sewingkit.jpg" }
         ];
 
         function displayProducts(filteredProducts = products) {
