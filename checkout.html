@@ -137,18 +137,15 @@
                 return;
             }
 
-            // Store order data in localStorage **without JSON**
             localStorage.setItem("customerId", customerId);
             localStorage.setItem("paymentType", paymentType);
             localStorage.setItem("paymentNumber", paymentNumber);
             localStorage.setItem("paymentExpiryDate", paymentExpiryDate);
             localStorage.setItem("orderDate", new Date().toLocaleString());
 
-            // Redirect to confirmation page
             window.location.href = "order-confirmation.html";
         });
 
-        // Load header dynamically
         fetch("header.html")
             .then(response => response.text())
             .then(data => {

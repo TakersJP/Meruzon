@@ -88,40 +88,48 @@
 
     <script>
         function loadCart() {
-            let cart = JSON.parse(localStorage.getItem("shoppingCart")) || {};
             let cartTableBody = document.getElementById("cartTableBody");
             let cartTotal = document.getElementById("cartTotal");
             let totalAmount = 0;
 
             cartTableBody.innerHTML = ""; 
-            Object.keys(cart).forEach(productId => {
-                let product = cart[productId];
 
-                let row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${product.id}</td>
-                    <td>${product.name}</td>
-                    <td>
-                        <input type="number" min="1" value="${product.quantity}" id="qty-${product.id}" style="width: 50px;">
-                    </td>
-                    <td>$${product.price.toFixed(2)}</td>
-                    <td>$${(product.price * product.quantity).toFixed(2)}</td>
-                    <td>
-                        <button class="update-btn" onclick="updateQuantity(${product.id})">Update</button>
-                        <button class="remove-btn" onclick="removeFromCart(${product.id})">Remove</button>
-                    </td>
-                `;
+            // Loop through localStorage keys
+            for (let i = 0; i < localStorage.length; i++) {
+                let productId = localStorage.key(i);
 
-                cartTableBody.appendChild(row);
-                totalAmount += product.price * product.quantity;
-            });
+                if (productId.startsWith("cart_")) { // Ensures only cart items are fetched
+                    let productData = localStorage.getItem(productId).split("|"); // Split stored data
+
+                    let name = productData[0];
+                    let price = parseFloat(productData[1]);
+                    let quantity = parseInt(productData[2]);
+
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${productId.replace("cart_", "")}</td>
+                        <td>${name}</td>
+                        <td>
+                            <input type="number" min="1" value="${quantity}" id="qty-${productId}" style="width: 50px;">
+                        </td>
+                        <td>$${price.toFixed(2)}</td>
+                        <td>$${(price * quantity).toFixed(2)}</td>
+                        <td>
+                            <button class="update-btn" onclick="updateQuantity('${productId}')">Update</button>
+                            <button class="remove-btn" onclick="removeFromCart('${productId}')">Remove</button>
+                        </td>
+                    `;
+
+                    cartTableBody.appendChild(row);
+                    totalAmount += price * quantity;
+                }
+            }
 
             cartTotal.textContent = `$${totalAmount.toFixed(2)}`;
         }
 
         // Function to update product quantity
         function updateQuantity(productId) {
-            let cart = JSON.parse(localStorage.getItem("shoppingCart")) || {};
             let newQuantity = document.getElementById(`qty-${productId}`).value;
 
             if (newQuantity <= 0) {
@@ -129,22 +137,16 @@
                 return;
             }
 
-            if (cart[productId]) {
-                cart[productId].quantity = parseInt(newQuantity);
-                localStorage.setItem("shoppingCart", JSON.stringify(cart));
-                loadCart();
-            }
+            let productData = localStorage.getItem(productId).split("|");
+            productData[2] = newQuantity; // Update quantity
+            localStorage.setItem(productId, productData.join("|")); // Save updated data
+            loadCart();
         }
 
         // Function to remove product from cart
         function removeFromCart(productId) {
-            let cart = JSON.parse(localStorage.getItem("shoppingCart")) || {};
-
-            if (cart[productId]) {
-                delete cart[productId];
-                localStorage.setItem("shoppingCart", JSON.stringify(cart));
-                loadCart();
-            }
+            localStorage.removeItem(productId);
+            loadCart();
         }
 
         // Load cart when page loads
