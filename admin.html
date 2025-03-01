@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Page</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Georgia, serif !important;
+            margin: 20px !important;
+        }
+
+        table {
+            width: 100% !important;
+            border-collapse: collapse;
+            background-color: #F2F2F2;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #7FBFB0;
+            color: white;
+        }
+
+        .hd-h1 {
+            font-family: Georgia, serif !important;
+            padding-top: 20px !important;
+            padding-left: 10px !important;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .table-container {
+            flex: 1;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <div class="container">
+        <div class="table-container">
+            <h1 class="hd-h1">Administrator Sales Report by Day</h1>
+            <table id="salesTable" class="table">
+                <tr>
+                    <th>Order Date</th>
+                    <th>Total Order Amount</th>
+                </tr>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <h1 class="hd-h1">Customer List</h1>
+            <table id="customerTable" class="table">
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Name</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function loadHeader() {
+            fetch("header.html")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("header").innerHTML = data;
+                })
+                .catch(error => console.error("Error loading header:", error));
+        }
+
+        const salesData = [
+            { orderDate: "2024-02-01", totalAmount: 1500.50 },
+            { orderDate: "2024-02-02", totalAmount: 2300.75 },
+            { orderDate: "2024-02-03", totalAmount: 1750.00 }
+        ];
+
+        const customerData = [
+            { customerId: 1, firstName: "John", lastName: "Doe" },
+            { customerId: 2, firstName: "Jane", lastName: "Smith" },
+            { customerId: 3, firstName: "Michael", lastName: "Brown" }
+        ];
+
+        function generateSalesTable(data) {
+            const table = document.getElementById("salesTable");
+            let sum = 0;
+
+            data.forEach(sale => {
+                sum += sale.totalAmount;
+
+                let row = `<tr>
+                    <td>${sale.orderDate}</td>
+                    <td style='text-align: right;'>$${sale.totalAmount.toFixed(2)}</td>
+                </tr>`;
+                table.innerHTML += row;
+            });
+
+            let totalRow = `<tr>
+                <th>Total</th>
+                <td style='text-align: right;'>$${sum.toFixed(2)}</td>
+            </tr>`;
+            table.innerHTML += totalRow;
+        }
+
+        function generateCustomerTable(data) {
+            const table = document.getElementById("customerTable");
+
+            data.forEach(customer => {
+                let row = `<tr>
+                    <td>${customer.customerId}</td>
+                    <td>${customer.firstName} ${customer.lastName}</td>
+                </tr>`;
+                table.innerHTML += row;
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadHeader();
+            generateSalesTable(salesData);
+            generateCustomerTable(customerData);
+        });
+    </script>
+
+</body>
+</html>
