@@ -1,0 +1,116 @@
+<!-- admin.html was made by Teppei. Takumi (TakersJP) is pushing this to the repo since Teppei's GitHub was not functiong properly-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Profile</title>
+    <link href="css/style.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: Georgia, serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            text-align: center;
+            color: black;
+        }
+
+        .container {
+            width: 60%;
+            margin: 40px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            color: black;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #7FBFB0;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <div class="container">
+        <h1>Customer Profile</h1>
+
+        <table>
+            <tr><th>ID</th><td id="customerId">N/A</td></tr>
+            <tr><th>First Name</th><td id="firstName">N/A</td></tr>
+            <tr><th>Last Name</th><td id="lastName">N/A</td></tr>
+            <tr><th>Email</th><td id="email">N/A</td></tr>
+            <tr><th>Phone</th><td id="phone">N/A</td></tr>
+            <tr><th>Address</th><td id="address">N/A</td></tr>
+            <tr><th>City</th><td id="city">N/A</td></tr>
+            <tr><th>State</th><td id="state">N/A</td></tr>
+            <tr><th>Postal Code</th><td id="postalCode">N/A</td></tr>
+            <tr><th>Country</th><td id="country">N/A</td></tr>
+            <tr><th>User ID</th><td id="userId">N/A</td></tr>
+        </table>
+    </div>
+
+    <script>
+   
+        fetch("header.html")
+                .then(response => response.text())
+                .then(data => {
+                document.getElementById("header").innerHTML = data;
+    
+                let loggedInUser = localStorage.getItem("loggedInUser");
+                if (loggedInUser) {
+                    document.getElementById("userLoginSection").innerHTML = `
+                        <span>Signed in as: <b>${loggedInUser}</b> | 
+                        <a href="#" id="logoutButton">Logout</a></span>
+                    `;
+    
+                   
+                    document.getElementById("logoutButton").addEventListener("click", function() {
+                        localStorage.removeItem("loggedInUser");
+                        window.location.href = "login.html"; 
+                    });
+                }
+            })
+            .catch(error => console.error("Error loading header:", error));
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let fields = ["customerId", "firstName", "lastName", "email", "phone", 
+                          "address", "city", "state", "postalCode", "country"];
+
+            fields.forEach(field => {
+                let value = localStorage.getItem(`user_${field}`);
+                document.getElementById(field).textContent = value ? value : "N/A";
+            });
+
+            let username = localStorage.getItem("user_username");
+            document.getElementById("userId").textContent = username ? username : "N/A";
+        });
+    </script>
+
+</body>
+</html>
+
+
