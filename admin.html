@@ -1,3 +1,4 @@
+<!-- admin.html was made by Teppei. Takumi (TakersJP) is pushing this to the repo since Teppei's GitHub was crashing for some reason-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,7 +102,7 @@
 
     <div id="header"></div>
 
-    <!-- Password is meruzon_admin -->
+    <!-- Password prompt (always asks for admin password) -->
     <div id="passwordPrompt" class="password-box">
         <h2>Admin Access Required</h2>
         <p>Enter the admin password to access this page:</p>
@@ -110,6 +111,7 @@
         <p id="errorMessage" class="error-message hidden">Incorrect password. Try again.</p>
     </div>
 
+    <!-- Admin content (hidden until access is granted) -->
     <div class="container hidden" id="adminContent">
         <div class="table-container">
             <h1>Administrator Sales Report by Day</h1>
@@ -158,6 +160,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
+            // 🔴 REMOVE PREVIOUS ADMIN ACCESS ON PAGE LOAD
             localStorage.removeItem("adminAccess"); 
 
             let salesData = [
@@ -215,7 +218,7 @@
 
                     document.getElementById("logoutButton").addEventListener("click", function () {
                         localStorage.removeItem("loggedInUser");
-                        localStorage.removeItem("adminAccess"); 
+                        localStorage.removeItem("adminAccess"); // Clear admin access on logout
                         window.location.href = "login.html";
                     });
                 }
