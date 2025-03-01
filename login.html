@@ -99,23 +99,8 @@
         fetch("header.html")
             .then(response => response.text())
             .then(data => {
-            document.getElementById("header").innerHTML = data;
-
-            // After header is loaded, check if user is logged in
-            let loggedInUser = localStorage.getItem("loggedInUser");
-            if (loggedInUser) {
-                document.getElementById("userLoginSection").innerHTML = `
-                    <span>Signed in as: <b>${loggedInUser}</b> | 
-                    <a href="#" id="logoutButton">Logout</a></span>
-                `;
-
-                // Logout functionality
-                document.getElementById("logoutButton").addEventListener("click", function() {
-                    localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.html"; // Redirect to login page
-                });
-            }
-        })
+                document.getElementById("header").innerHTML = data;
+            })
         .catch(error => console.error("Error loading header:", error));
     </script>
 
@@ -128,7 +113,7 @@
     let enteredUsername = document.getElementById("username").value.trim();
     let enteredPassword = document.getElementById("password").value.trim();
 
-    // Retrieve stored credentials
+
     let storedUsername = localStorage.getItem("user_username");
     let storedPassword = localStorage.getItem("user_password");
 

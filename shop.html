@@ -5,47 +5,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="css/style.css" rel="stylesheet">
-
 </head>
     <body>
-        <!--
-        <header>
-            <img src="img/store_logo.png" alt="Logo">
-            <h1 align="center"><font face="cursive" color="#3399FF"><a href="shop.html">Meruzon</a></font></h1>
-            <nav>
-                <a href="shop.html">Home</a>
-                <a href="listprod.html">Shopping</a>
-                <a href="listorder.html">Orders</a>
-                <a href="customer.html">Customer</a>
-                <a href="admin.html">Administrators</a>
-                <a href="showcart.html">Cart</a>
-                <a href="login.html">Login</a>
-            </nav>
-        </header>
-        -->
         <div id="header"></div>
         <script>
-        fetch("header.html")
-            .then(response => response.text())
-            .then(data => {
-            document.getElementById("header").innerHTML = data;
-
-            // After header is loaded, check if user is logged in
-            let loggedInUser = localStorage.getItem("loggedInUser");
-            if (loggedInUser) {
-                document.getElementById("userLoginSection").innerHTML = `
-                    <span>Signed in as: <b>${loggedInUser}</b> | 
-                    <a href="#" id="logoutButton">Logout</a></span>
-                `;
-
-                // Logout functionality
-                document.getElementById("logoutButton").addEventListener("click", function() {
-                    localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.html"; // Redirect to login page
-                });
-            }
-        })
-        .catch(error => console.error("Error loading header:", error));
+            fetch("header.html")
+                .then(response => response.text())
+                .then(data => {
+                document.getElementById("header").innerHTML = data;
+    
+                let loggedInUser = localStorage.getItem("loggedInUser");
+                if (loggedInUser) {
+                    document.getElementById("userLoginSection").innerHTML = `
+                        <span>Signed in as: <b>${loggedInUser}</b> | 
+                        <a href="#" id="logoutButton">Logout</a></span>
+                    `;
+    
+                   
+                    document.getElementById("logoutButton").addEventListener("click", function() {
+                        localStorage.removeItem("loggedInUser");
+                        window.location.href = "login.html"; 
+                    });
+                }
+            })
+            .catch(error => console.error("Error loading header:", error));
         </script>
 
         <h2 align="center"><a href="login.html">Login</a></h2>
@@ -57,8 +40,6 @@
         <h2 align="center"><a href="customer.html">Customer Info</a></h2>
 
         <h2 align="center"><a href="admin.html">Administrators</a></h2>
-
-        <h2 align="center"><a href="logout.html">Logout</a></h2>
 
     </body>
 </html>

@@ -77,7 +77,6 @@
 </head>
 <body>
 
-    <!-- Simulated Header -->
     <div id="header"></div>
 
     <h1>Browse Products By Category and Search by Product Name:</h1>
@@ -114,7 +113,6 @@
     </table>
 
     <script>
-        // Simulated Product Data (instead of database)
         const products = [
             { id: 1, name: "Attack on Titan Vol. 1", price: 9.99, category: "Mangas", image: "img/aot.jpg" },
             { id: 2, name: "Elden Ring", price: 59.99, category: "Video Games", image: "img/eldenring.jpg" },
@@ -123,10 +121,9 @@
             { id: 5, name: "Chainsaw Man Vol. 1", price: 10.99, category: "Mangas", image: "img/chainsawman.jpg" }
         ];
 
-        // Function to Display Products
         function displayProducts(filteredProducts = products) {
             const tableBody = document.getElementById("productTable");
-            tableBody.innerHTML = ""; // Clear existing rows
+            tableBody.innerHTML = "";
 
             filteredProducts.forEach(product => {
                 const row = document.createElement("tr");
@@ -145,7 +142,6 @@
             });
         }
 
-        // Function to Filter Products Based on Selection
         function filterProducts() {
             const category = document.getElementById("categoryFilter").value;
             const searchText = document.getElementById("productSearch").value.toLowerCase();
@@ -159,29 +155,24 @@
             displayProducts(filteredProducts);
         }
 
-        // Function to Reset Filters
         function resetFilters() {
             document.getElementById("categoryFilter").value = "All";
             document.getElementById("productSearch").value = "";
             displayProducts();
         }
 
-        // Function to Simulate Adding to Cart
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
             alert(`Added "${product.name}" to cart!`);
         }
 
-        // Load products initially
         displayProducts();
 
-        // Load header dynamically (assuming you have a `header.html` file)
         fetch("header.html")
             .then(response => response.text())
             .then(data => {
             document.getElementById("header").innerHTML = data;
 
-            // After header is loaded, check if user is logged in
             let loggedInUser = localStorage.getItem("loggedInUser");
             if (loggedInUser) {
                 document.getElementById("userLoginSection").innerHTML = `
@@ -189,10 +180,9 @@
                     <a href="#" id="logoutButton">Logout</a></span>
                 `;
 
-                // Logout functionality
                 document.getElementById("logoutButton").addEventListener("click", function() {
                     localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.html"; // Redirect to login page
+                    window.location.href = "login.html";
                 });
             }
         })

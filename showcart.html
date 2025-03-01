@@ -95,12 +95,12 @@
 
             cartTableBody.innerHTML = ""; 
 
-            // Loop through localStorage keys
+           
             for (let i = 0; i < localStorage.length; i++) {
                 let productId = localStorage.key(i);
 
-                if (productId.startsWith("cart_")) { // Ensures only cart items are fetched
-                    let productData = localStorage.getItem(productId).split("|"); // Split stored data
+                if (productId.startsWith("cart_")) { 
+                    let productData = localStorage.getItem(productId).split("|"); 
 
                     let name = productData[0];
                     let price = parseFloat(productData[1]);
@@ -129,7 +129,7 @@
             cartTotal.textContent = `$${totalAmount.toFixed(2)}`;
         }
 
-        // Function to update product quantity
+ 
         function updateQuantity(productId) {
             let newQuantity = document.getElementById(`qty-${productId}`).value;
 
@@ -139,18 +139,17 @@
             }
 
             let productData = localStorage.getItem(productId).split("|");
-            productData[2] = newQuantity; // Update quantity
-            localStorage.setItem(productId, productData.join("|")); // Save updated data
+            productData[2] = newQuantity; 
+            localStorage.setItem(productId, productData.join("|")); 
             loadCart();
         }
 
-        // Function to remove product from cart
         function removeFromCart(productId) {
             localStorage.removeItem(productId);
             loadCart();
         }
 
-        // Load cart when page loads
+
         document.addEventListener("DOMContentLoaded", function () {
             loadCart();
         });
@@ -160,7 +159,6 @@
             .then(data => {
             document.getElementById("header").innerHTML = data;
 
-            // After header is loaded, check if user is logged in
             let loggedInUser = localStorage.getItem("loggedInUser");
             if (loggedInUser) {
                 document.getElementById("userLoginSection").innerHTML = `
@@ -168,10 +166,9 @@
                     <a href="#" id="logoutButton">Logout</a></span>
                 `;
 
-                // Logout functionality
                 document.getElementById("logoutButton").addEventListener("click", function() {
                     localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.html"; // Redirect to login page
+                    window.location.href = "login.html"; 
                 });
             }
         })
