@@ -120,7 +120,11 @@
             </div>
             
             <!-- Continue Shopping ボタン -->
-            <button id="continueShoppingBtn">Continue Shopping</button>
+            <!-- <button id="continueShoppingBtn">Continue Shopping</button> -->
+            <p id="continueShopping">
+                <a href="listprod.html">Continue Shopping</a>
+            </p>
+            
         </section>
         
         <!-- レビュー表示セクション -->
@@ -193,9 +197,11 @@
                 // ここでlocalStorageなどへの保存処理に発展可能
             });
             
+            /*
             document.getElementById("continueShoppingBtn").addEventListener("click", function() {
                 window.location.href = "listprod.html";
             });
+            */
             
             document.getElementById("reviewForm").addEventListener("submit", function(event) {
                 event.preventDefault();
