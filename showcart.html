@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Shopping Cart</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Georgia, serif !important;
+            margin: 20px !important;
+        }
+
+        table {
+            width: 100% !important;
+            border-collapse: collapse;
+            background-color: #F2F2F2;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #7FBFB0;
+            color: black;
+        }
+
+        .hd-h1, .hd-h2 {
+            font-family: Georgia, serif !important;
+            padding-top: 20px !important;
+            padding-left: 10px !important;
+        }
+
+        .cart-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .update-btn, .remove-btn {
+            background-color: #638AB4;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .update-btn:hover, .remove-btn:hover {
+            background-color: #5078A1;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <h1 class="hd-h1">Your Shopping Cart</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Id</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="cartTableBody"></tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" align="right"><b>Order Total</b></td>
+                <td align="right" id="cartTotal">$0.00</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="cart-buttons">
+        <h2 class="hd-h2"><a href="listprod.html">Continue Shopping</a></h2>
+        <h2 class="hd-h2"><a href="checkout.html">Check Out</a></h2>
+    </div>
+
+    <script>
+        // Function to load cart from localStorage
+        function loadCart() {
+            let cart = JSON.parse(localStorage.getItem("shoppingCart")) || {};
+            let cartTableBody = document.getElementById("cartTableBody");
+            let cartTotal = document.getElementById("cartTotal");
+            let totalAmount = 0;
+
+            cartTableBody.innerHTML = ""; // Clear table before reloading
+
+            Object.keys(cart).forEach(productId => {
+                let product = cart[productId];
+
+                let row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>
+                        <input type="number" min="1" value="${product.quantity}" id="qty-${product.id}" style="width: 50px;">
+                    </td>
+                    <td>$${product.price.toFixed(2)}</td>
+                    <td>$${(product.price * product.quantity).toFixed(2)}</td>
+                    <td>
+                        <button class="update-btn" onclick="updateQuantity(${product.id})">Update</button>
+                        <button class="remove-btn" onclick="removeFromCart(${product.id})">Remove</button>
+                    </td>
+                `;
+
+                cartTableBody.appendChild(row);
+                totalAmount += product.price * product.quantity;
+            });
+
+            cartTotal.textContent = `$${totalAmount.toFixed(2)}`;
+        }
+
+        // Function to update product quantity
+        function updateQuantity(productId) {
+            let cart = JSON.parse(localStorage.getItem("shoppingCart")) || {};
+            let newQuantity = document.getElementById(`qty-${productId}`).value;
+
+            if (newQuantity <= 0) {
+                alert("Quantity must be at least 1.");
+                return;
+            }
+
+            if (cart[productId]) {
+                cart[productId].quantity = parseInt(newQuantity);
+                localStorage.setItem("shoppingCart", JSON.stringify(cart));
+                loadCart();
+            }
+        }
+
+        // Function to remove product from cart
+        function removeFromCart(productId) {
+            let cart = JSON.parse(localStorage.getItem("shoppingCart")) || {};
+
+            if (cart[productId]) {
+                delete cart[productId];
+                localStorage.setItem("shoppingCart", JSON.stringify(cart));
+                loadCart();
+            }
+        }
+
+        // Load cart when page loads
+        document.addEventListener("DOMContentLoaded", function () {
+            loadCart();
+        });
+
+        // Load header dynamically
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header").innerHTML = data;
+            })
+            .catch(error => console.error("Error loading header:", error));
+    </script>
+
+</body>
+</html>
