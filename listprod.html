@@ -147,12 +147,13 @@
                     <td class="col-md-1" style="text-align: center;">
                         <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
                     </td>
-                    <td>${product.name}</td>
+                    <td>
+                        <a href="detailprod.html?id=${product.id}">${product.name}</a>
+                    </td>
                     <td><img class="img" src="${product.image}" alt="${product.name}"></td>
                     <td>${product.category}</td>
                     <td>$${product.price.toFixed(2)}</td>
                 `;
-
                 tableBody.appendChild(row);
             });
         }
