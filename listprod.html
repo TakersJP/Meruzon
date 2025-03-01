@@ -78,12 +78,13 @@
 
     <form class="form-fm" onsubmit="event.preventDefault(); filterProducts();">
         <p align="left">
-            <select id="categoryFilter" class="category-select">
+            <select id="categoryFilter" class="category-select" onchange="filterProducts()">
                 <option value="All">All</option>
-                <option value="Mangas">Mangas</option>
-                <option value="Video Games">Video Games</option>
-                <option value="TCGs">TCGs</option>
-                <option value="Figures">Figures</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Lifestyle Goods">Lifestyle Goods</option>
+                <option value="Ceramics & Glass Crafts">Ceramics & Glass Crafts</option>
+                <option value="Knitted Goods">Knitted Goods</option>
+                <option value="Craft Supplies & Tools">Craft Supplies & Tools</option>
             </select>
 
             <input type="text" id="productSearch" class="search-box" placeholder="Search product name">
