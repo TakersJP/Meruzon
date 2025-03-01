@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meruzon</title>
+
+    <style>
+        body {
+            font-family: Georgia, serif !important;
+            margin: 20px !important;
+        }
+
+        table {
+            font-family: Georgia, serif !important;
+            font-size: 20px !important;
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #F2F2F2;
+            margin-top: 20px;
+            color: black;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #7FBFB0;
+            color: white;
+        }
+
+        .form-fm {
+            padding-top: 20px !important;
+            padding-left: 10px !important;
+        }
+
+        .col-md-1 {
+            width: 150px;
+        }
+
+        .img {
+            max-height: 200px;
+        }
+
+        .category-select {
+            font-size: 16px;
+            padding: 5px;
+        }
+
+        .search-box {
+            font-size: 16px;
+            padding: 5px;
+            width: 200px;
+        }
+
+        .add-to-cart {
+            background-color: #638AB4;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .add-to-cart:hover {
+            background-color: #5078A1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Simulated Header -->
+    <div id="header"></div>
+
+    <h1>Browse Products By Category and Search by Product Name:</h1>
+
+    <form class="form-fm" onsubmit="event.preventDefault(); filterProducts();">
+        <p align="left">
+            <select id="categoryFilter" class="category-select">
+                <option value="All">All</option>
+                <option value="Mangas">Mangas</option>
+                <option value="Video Games">Video Games</option>
+                <option value="TCGs">TCGs</option>
+                <option value="Figures">Figures</option>
+            </select>
+
+            <input type="text" id="productSearch" class="search-box" placeholder="Search product name">
+            <button type="submit">Submit</button>
+            <button type="reset" onclick="resetFilters()">Reset</button>
+        </p>
+    </form>
+
+    <h3>All Products</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-md-1"></th>
+                <th>Product Name</th>
+                <th>Product Image</th>
+                <th>Category</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody id="productTable"></tbody>
+    </table>
+
+    <script>
+        // Simulated Product Data (instead of database)
+        const products = [
+            { id: 1, name: "Attack on Titan Vol. 1", price: 9.99, category: "Mangas", image: "img/aot.jpg" },
+            { id: 2, name: "Elden Ring", price: 59.99, category: "Video Games", image: "img/eldenring.jpg" },
+            { id: 3, name: "Pokémon TCG Booster Pack", price: 4.99, category: "TCGs", image: "img/pokemon.jpg" },
+            { id: 4, name: "Naruto Uzumaki Figure", price: 29.99, category: "Figures", image: "img/naruto.jpg" },
+            { id: 5, name: "Chainsaw Man Vol. 1", price: 10.99, category: "Mangas", image: "img/chainsawman.jpg" }
+        ];
+
+        // Function to Display Products
+        function displayProducts(filteredProducts = products) {
+            const tableBody = document.getElementById("productTable");
+            tableBody.innerHTML = ""; // Clear existing rows
+
+            filteredProducts.forEach(product => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td class="col-md-1" style="text-align: center;">
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
+                    </td>
+                    <td>${product.name}</td>
+                    <td><img class="img" src="${product.image}" alt="${product.name}"></td>
+                    <td>${product.category}</td>
+                    <td>$${product.price.toFixed(2)}</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to Filter Products Based on Selection
+        function filterProducts() {
+            const category = document.getElementById("categoryFilter").value;
+            const searchText = document.getElementById("productSearch").value.toLowerCase();
+
+            const filteredProducts = products.filter(product => {
+                const matchesCategory = category === "All" || product.category === category;
+                const matchesSearch = product.name.toLowerCase().includes(searchText);
+                return matchesCategory && matchesSearch;
+            });
+
+            displayProducts(filteredProducts);
+        }
+
+        // Function to Reset Filters
+        function resetFilters() {
+            document.getElementById("categoryFilter").value = "All";
+            document.getElementById("productSearch").value = "";
+            displayProducts();
+        }
+
+        // Function to Simulate Adding to Cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            alert(`Added "${product.name}" to cart!`);
+        }
+
+        // Load products initially
+        displayProducts();
+
+        // Load header dynamically (assuming you have a `header.html` file)
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header").innerHTML = data;
+            })
+            .catch(error => console.error("Error loading header:", error));
+    </script>
+
+</body>
+</html>

@@ -115,12 +115,12 @@
         let storedPassword = localStorage.getItem("user_password");
 
         if (enteredUsername === storedUsername && enteredPassword === storedPassword) {
-            localStorage.setItem("loggedInUser", enteredUsername); // Store logged-in user
-            window.location.href = "shop.html"; // Redirect to homepage
-    } else {
-        document.getElementById("errorMessage").textContent = "Invalid username or password.";
-        document.getElementById("errorMessage").style.display = "block";
-    }
+            localStorage.setItem("loggedInUser", enteredUsername); 
+            window.location.href = "shop.html"; 
+        } else {
+            document.getElementById("errorMessage").textContent = "Invalid username or password.";
+            document.getElementById("errorMessage").style.display = "block";
+        }
 });
 
     </script>
