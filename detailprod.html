@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meruzon</title>
+
+    <style>
+        body {
+            font-family: Georgia, serif !important;
+            margin: 20px !important;
+        }
+
+        table {
+            font-family: Georgia, serif !important;
+            font-size: 20px !important;
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #F2F2F2;
+            margin-top: 20px;
+            color: black;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #7FBFB0;
+            color: white;
+        }
+
+        .form-fm {
+            padding-top: 20px !important;
+            padding-left: 10px !important;
+        }
+
+        .col-md-1 {
+            width: 150px;
+        }
+
+        .img {
+            max-height: 200px;
+        }
+
+        .category-select {
+            font-size: 16px;
+            padding: 5px;
+        }
+
+        .search-box {
+            font-size: 16px;
+            padding: 5px;
+            width: 200px;
+        }
+
+        .add-to-cart {
+            background-color: #638AB4;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .add-to-cart:hover {
+            background-color: #5078A1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー部分（必要なら header.html を動的に読み込むなど） -->
+    <div id="header">
+        <!-- ここに共通のヘッダー内容を挿入 -->
+        <h1>Meruzon</h1>
+        <nav>
+            <a href="listprod.html">Begin Shopping (backとかのがいいかも) (場所も調整する)</a>
+            <!-- その他のナビゲーションリンク -->
+        </nav>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <!-- 商品詳細セクション -->
+        <section class="product-detail">
+            <!-- 商品名 -->
+            <h2 id="productName">Product Name</h2>
+
+            <!-- 商品の説明 -->
+            <!-- <p id="productDescription">This is the product description. It provides details about the handmade product.</p> -->
+            <p><strong>Description:</strong> <span id="productDescription">This is the product description. It provides details about the handmade product.</span></p>
+
+
+
+            <!-- 大きな商品の画像 -->
+            <img id="productImage" src="img/sample.jpg" alt="Product Image" style="max-width:300px;" class="img">
+            
+            <!-- 商品ID と価格 -->
+            <!-- <p>ID: <span id="productId">1</span></p>
+            <p>Price: $<span id="productPrice">30.00</span></p> -->
+
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <td><span id="productId">xx</span></td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td>$<span id="productPrice">xx.xx</span></td>
+                </tr>
+            </table>  
+            
+            <!-- 数量選択と Add to Cart ボタン -->
+            <div class="cart-section">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" value="1" min="1">
+                <button class="add-to-cart" id="addToCartBtn">Add to Cart</button>
+            </div>
+            
+            <!-- Continue Shopping ボタン -->
+            <button id="continueShoppingBtn">Continue Shopping</button>
+        </section>
+        
+        <!-- レビュー表示セクション -->
+        <section class="review-list">
+            <h3>Reviews</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rate</th>
+                        <th>Date</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody id="reviewTable">
+                    <!-- レビューはJavaScriptで動的に挿入 -->
+                </tbody>
+            </table>
+        </section>
+        
+        <!-- レビュー投稿フォーム -->
+        <section class="review-form">
+            <h3>Add Review</h3>
+            <form id="reviewForm">
+                <label for="reviewRate">Rate (1-5):</label>
+                <input type="number" id="reviewRate" min="1" max="5" required>
+                <br>
+                <label for="reviewComment">Comment:</label>
+                <textarea id="reviewComment" required></textarea>
+                <br>
+                <button type="submit">Submit Review</button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        // ============================
+        // サンプル用のダミーデータ
+        // ============================
+        const product = {
+            id: 1,
+            name: "Handmade Beaded Earrings",
+            description: "Beautiful handmade earrings made with high quality beads. A perfect accessory to brighten your outfit.",
+            price: 15.00,
+            image: "img/earrings.jpg"
+        };
+
+        let reviews = [
+            { rate: 4, date: "2024-12-06 02:11:29.46", comment: "Really nice product!" },
+            { rate: 5, date: "2024-12-07 10:05:12.00", comment: "Absolutely loved it!" }
+        ];
+
+        // ============================
+        // ページ読み込み時の初期設定
+        // ============================
+        window.onload = function() {
+            // 商品情報の表示
+            document.getElementById("productName").textContent = product.name;
+            document.getElementById("productId").textContent = product.id;
+            document.getElementById("productPrice").textContent = product.price.toFixed(2);
+            document.getElementById("productDescription").textContent = product.description;
+            document.getElementById("productImage").src = product.image;
+            
+            // レビュー一覧の表示
+            displayReviews();
+            
+            // イベントリスナーの設定
+            document.getElementById("addToCartBtn").addEventListener("click", function() {
+                const quantity = parseInt(document.getElementById("quantity").value) || 1;
+                alert(`Added ${quantity} of "${product.name}" to cart!`);
+                // ここでlocalStorageなどへの保存処理に発展可能
+            });
+            
+            document.getElementById("continueShoppingBtn").addEventListener("click", function() {
+                window.location.href = "listprod.html";
+            });
+            
+            document.getElementById("reviewForm").addEventListener("submit", function(event) {
+                event.preventDefault();
+                addReview();
+            });
+        };
+
+        // ============================
+        // レビュー表示用関数
+        // ============================
+        function displayReviews() {
+            const reviewTable = document.getElementById("reviewTable");
+            reviewTable.innerHTML = "";  // 既存の内容をクリア
+            
+            reviews.forEach(review => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${review.rate}</td><td>${review.date}</td><td>${review.comment}</td>`;
+                reviewTable.appendChild(row);
+            });
+        }
+
+        // ============================
+        // レビュー追加用関数
+        // ============================
+        function addReview() {
+            const rate = parseInt(document.getElementById("reviewRate").value);
+            const comment = document.getElementById("reviewComment").value;
+            const now = new Date();
+            const formattedDate = now.toISOString().slice(0, 19).replace("T", " ");
+            reviews.push({ rate: rate, date: formattedDate, comment: comment });
+            displayReviews();
+            document.getElementById("reviewForm").reset();
+        }
+    </script>
+
+</body>
+</html>
