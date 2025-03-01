@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meruzon Checkout</title>
+    <title>Otakumate Checkout</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body {
             font-family: Georgia, serif !important;
             margin: 20px !important;
-            
         }
 
         table {
-            width: 60% !important;
+            width: 60%;
             border-collapse: collapse;
             background-color: #F2F2F2;
             margin: 0 auto;
@@ -38,6 +37,7 @@
             padding-left: 10px !important;
             margin-bottom: 20px;
             text-align: center;
+            color: black;
         }
 
         .checkout-container {
@@ -70,11 +70,11 @@
                 <tbody>
                     <tr>
                         <td><label for="customerId">Customer ID:</label></td>
-                        <td><input type="text" id="customerId" name="customerId" required></td>
+                        <td><input type="text" id="customerId" required></td>
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
-                        <td><input type="password" id="password" name="password" required></td>
+                        <td><input type="password" id="password" required></td>
                     </tr>
                     <tr>
                         <td><label>Payment Type:</label></td>
@@ -91,11 +91,11 @@
                     </tr>
                     <tr>
                         <td><label for="paymentNumber">Payment Number:</label></td>
-                        <td><input type="text" id="paymentNumber" name="paymentNumber" required></td>
+                        <td><input type="text" id="paymentNumber" required></td>
                     </tr>
                     <tr>
                         <td><label for="paymentExpiryDate">Expiry Date:</label></td>
-                        <td><input type="text" id="paymentExpiryDate" name="paymentExpiryDate" placeholder="MM/YY" required></td>
+                        <td><input type="text" id="paymentExpiryDate" placeholder="MM/YY" required></td>
                     </tr>
                     <tr>
                         <td><button type="reset">Reset</button></td>
@@ -109,7 +109,7 @@
 
     <script>
         document.getElementById("checkoutForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent form from reloading page
+            event.preventDefault(); // Prevent form from reloading the page
 
             let customerId = document.getElementById("customerId").value.trim();
             let password = document.getElementById("password").value.trim();
@@ -126,7 +126,7 @@
             }
 
             if (!/^\d{16}$/.test(paymentNumber)) {
-                errorMessage.textContent = "Invalid payment";
+                errorMessage.textContent = "Invalid payment number! Enter 16 digits without spaces.";
                 errorMessage.style.display = "block";
                 return;
             }
@@ -137,16 +137,12 @@
                 return;
             }
 
-            // Store payment details in localStorage (simulating order processing)
-            let orderData = {
-                customerId,
-                paymentType,
-                paymentNumber,
-                paymentExpiryDate,
-                orderDate: new Date().toLocaleString()
-            };
-
-            localStorage.setItem("lastOrder", JSON.stringify(orderData));
+            // Store order data in localStorage **without JSON**
+            localStorage.setItem("customerId", customerId);
+            localStorage.setItem("paymentType", paymentType);
+            localStorage.setItem("paymentNumber", paymentNumber);
+            localStorage.setItem("paymentExpiryDate", paymentExpiryDate);
+            localStorage.setItem("orderDate", new Date().toLocaleString());
 
             // Redirect to confirmation page
             window.location.href = "order-confirmation.html";
