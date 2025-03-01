@@ -87,15 +87,13 @@
     </div>
 
     <script>
-        // Function to load cart from localStorage
         function loadCart() {
             let cart = JSON.parse(localStorage.getItem("shoppingCart")) || {};
             let cartTableBody = document.getElementById("cartTableBody");
             let cartTotal = document.getElementById("cartTotal");
             let totalAmount = 0;
 
-            cartTableBody.innerHTML = ""; // Clear table before reloading
-
+            cartTableBody.innerHTML = ""; 
             Object.keys(cart).forEach(productId => {
                 let product = cart[productId];
 

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meruzon Checkout</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Georgia, serif !important;
+            margin: 20px !important;
+            
+        }
+
+        table {
+            width: 60% !important;
+            border-collapse: collapse;
+            background-color: #F2F2F2;
+            margin: 0 auto;
+            color: black;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #7FBFB0;
+            color: white;
+        }
+
+        .hd-h1 {
+            font-family: Georgia, serif !important;
+            padding-top: 20px !important;
+            padding-left: 10px !important;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .checkout-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .checkout-form {
+            display: inline-block;
+            text-align: left;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <h1 class="hd-h1">Enter your Customer ID and Payment Information to Complete the Transaction:</h1>
+
+    <div class="checkout-container">
+        <form class="checkout-form" id="checkoutForm">
+            <table>
+                <tbody>
+                    <tr>
+                        <td><label for="customerId">Customer ID:</label></td>
+                        <td><input type="text" id="customerId" name="customerId" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="password">Password:</label></td>
+                        <td><input type="password" id="password" name="password" required></td>
+                    </tr>
+                    <tr>
+                        <td><label>Payment Type:</label></td>
+                        <td>
+                            <input type="radio" id="visa" name="paymentType" value="VISA" required>
+                            <label for="visa">VISA</label><br>
+                            <input type="radio" id="master" name="paymentType" value="Mastercard" required>
+                            <label for="master">Mastercard</label><br>
+                            <input type="radio" id="paypal" name="paymentType" value="PayPal" required>
+                            <label for="paypal">PayPal</label><br>
+                            <input type="radio" id="applepay" name="paymentType" value="Apple Pay" required>
+                            <label for="applepay">Apple Pay</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="paymentNumber">Payment Number:</label></td>
+                        <td><input type="text" id="paymentNumber" name="paymentNumber" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="paymentExpiryDate">Expiry Date:</label></td>
+                        <td><input type="text" id="paymentExpiryDate" name="paymentExpiryDate" placeholder="MM/YY" required></td>
+                    </tr>
+                    <tr>
+                        <td><button type="reset">Reset</button></td>
+                        <td><button type="submit">Submit</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p id="errorMessage" class="error-message"></p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("checkoutForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form from reloading page
+
+            let customerId = document.getElementById("customerId").value.trim();
+            let password = document.getElementById("password").value.trim();
+            let paymentType = document.querySelector("input[name='paymentType']:checked")?.value;
+            let paymentNumber = document.getElementById("paymentNumber").value.trim();
+            let paymentExpiryDate = document.getElementById("paymentExpiryDate").value.trim();
+            let errorMessage = document.getElementById("errorMessage");
+
+            // Validate input
+            if (!customerId || !password || !paymentType || !paymentNumber || !paymentExpiryDate) {
+                errorMessage.textContent = "All fields are required!";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            if (!/^\d{16}$/.test(paymentNumber)) {
+                errorMessage.textContent = "Invalid payment";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(paymentExpiryDate)) {
+                errorMessage.textContent = "Invalid expiry date format! Use MM/YY.";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            // Store payment details in localStorage (simulating order processing)
+            let orderData = {
+                customerId,
+                paymentType,
+                paymentNumber,
+                paymentExpiryDate,
+                orderDate: new Date().toLocaleString()
+            };
+
+            localStorage.setItem("lastOrder", JSON.stringify(orderData));
+
+            // Redirect to confirmation page
+            window.location.href = "order-confirmation.html";
+        });
+
+        // Load header dynamically
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header").innerHTML = data;
+            })
+            .catch(error => console.error("Error loading header:", error));
+    </script>
+
+</body>
+</html>
