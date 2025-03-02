@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meruzon - Order List</title>
+  <link href="css/style.css" rel="stylesheet">
+  <style>
+    /* 注文一覧ページ用の簡単な追加スタイル */
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .order-table th, .order-table td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    .order-table th {
+      background-color: #7FBFB0;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- ヘッダー部分（共通） -->
+  <div id="header">
+    <h1>Meruzon</h1>
+    <nav>
+      <a href="listprod.html">Begin Shopping</a>
+      <!-- 他のナビゲーションリンク -->
+    </nav>
+  </div>
+
+  <main>
+    <h2>Order List</h2>
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Items</th>
+          <th>Total Amount</th>
+        </tr>
+      </thead>
+      <tbody id="orderTable">
+        <!-- 注文情報は JavaScript で動的に挿入 -->
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    // ============================
+    // Sample Order Data (For Demo)
+    // ============================
+    // ここでは、注文データを localStorage から取得するか、ダミーデータとして扱います。
+    // 今回はシンプルに、localStorage の "orders" キーから取得する例です。
+    // 注文データの例: [{ orderId: 1, date: "2024-12-08 14:30:00", items: "Item A, Item B", total: 50.00 }, ...]
+    
+    // 注文データが存在しない場合の初期値（デモ用）
+    const orders = JSON.parse(localStorage.getItem("orders")) || [
+      { orderId: 1, date: "2024-12-08 14:30:00", items: "Handmade Beaded Earrings x1, Leather Bracelet x1", total: 33.00 },
+      { orderId: 2, date: "2024-12-09 09:15:00", items: "Resin Pendant Necklace x1", total: 22.00 }
+    ];
+
+    // ============================
+    // Function to display orders
+    // ============================
+    function displayOrders() {
+      const orderTable = document.getElementById("orderTable");
+      orderTable.innerHTML = ""; // Clear existing content
+      
+      if (orders.length === 0) {
+        orderTable.innerHTML = "<tr><td colspan='4'>No orders found.</td></tr>";
+        return;
+      }
+      
+      orders.forEach(order => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${order.orderId}</td>
+          <td>${order.date}</td>
+          <td>${order.items}</td>
+          <td>$${order.total.toFixed(2)}</td>
+        `;
+        orderTable.appendChild(row);
+      });
+    }
+
+    // ============================
+    // On page load, display orders
+    // ============================
+    window.onload = function() {
+      displayOrders();
+    };
+  </script>
+</body>
+</html>
