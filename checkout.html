@@ -109,7 +109,7 @@
 
     <script>
         document.getElementById("checkoutForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent form from reloading the page
+            event.preventDefault(); 
 
             let customerId = document.getElementById("customerId").value.trim();
             let password = document.getElementById("password").value.trim();
@@ -118,7 +118,6 @@
             let paymentExpiryDate = document.getElementById("paymentExpiryDate").value.trim();
             let errorMessage = document.getElementById("errorMessage");
 
-            // Validate input
             if (!customerId || !password || !paymentType || !paymentNumber || !paymentExpiryDate) {
                 errorMessage.textContent = "All fields are required!";
                 errorMessage.style.display = "block";

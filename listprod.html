@@ -18,7 +18,6 @@
         }
 
         table {
-            font-family: Georgia, serif !important;
             font-size: 18px;
             width: 100%;
             border-collapse: collapse;
@@ -38,12 +37,7 @@
             color: white;
         }
 
-        .category-select {
-            font-size: 16px;
-            padding: 5px;
-        }
-
-        .search-box {
+        .category-select, .search-box {
             font-size: 16px;
             padding: 5px;
             width: 200px;
@@ -70,7 +64,6 @@
             margin: auto;
             border-radius: 5px;
         }
-
     </style>
 </head>
 <body>
@@ -130,8 +123,6 @@
             { id: 15, name: "Basic Sewing Kit", price: 10.00, category: "Craft Supplies & Tools", image: "img/sewingkit.jpg" }
         ];
 
-        let cart = []; 
-
         function displayProducts(filteredProducts = products) {
             const tableBody = document.getElementById("productTable");
             tableBody.innerHTML = "";
@@ -141,7 +132,7 @@
 
                 row.innerHTML = `
                     <td style="text-align: center;">
-                        <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
+                        <button class="add-to-cart" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">Add to Cart</button>
                     </td>
                     <td><a href="detailprod.html?id=${product.id}">${product.name}</a></td>
                     <td><img class="img" src="${product.image}" alt="${product.name}"></td>
@@ -152,37 +143,19 @@
             });
         }
 
-        function filterProducts() {
-            const category = document.getElementById("categoryFilter").value;
-            const searchText = document.getElementById("productSearch").value.toLowerCase();
+        function addToCart(id, name, price) {
+            let cartKey = `cart_${id}`;
+            let existingItem = localStorage.getItem(cartKey);
 
-            const filteredProducts = products.filter(product => {
-                const matchesCategory = category === "All" || product.category === category;
-                const matchesSearch = product.name.toLowerCase().includes(searchText);
-                return matchesCategory && matchesSearch;
-            });
-
-            displayProducts(filteredProducts);
-        }
-
-        function resetFilters() {
-            document.getElementById("categoryFilter").value = "All";
-            document.getElementById("productSearch").value = "";
-            displayProducts();
-        }
-
-        function addToCart(productId, quantity = 1) {
-            let product = products.find(p => p.id === productId);
-            if (!product) return;
-
-            let existingItem = cart.find(item => item.id === productId);
             if (existingItem) {
-                existingItem.quantity += quantity;
+                let itemData = existingItem.split("|");
+                let newQuantity = parseInt(itemData[2]) + 1;
+                localStorage.setItem(cartKey, `${name}|${price}|${newQuantity}`);
             } else {
-                cart.push({ id: productId, name: product.name, quantity: quantity });
+                localStorage.setItem(cartKey, `${name}|${price}|1`);
             }
 
-            alert(`Added "${product.name}" to cart!`);
+            alert(`Added "${name}" to cart!`);
         }
 
         displayProducts();
@@ -190,9 +163,22 @@
         fetch("header.html")
             .then(response => response.text())
             .then(data => {
-                document.getElementById("header").innerHTML = data;
-            })
-            .catch(error => console.error("Error loading header:", error));
+            document.getElementById("header").innerHTML = data;
+
+            let loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                document.getElementById("userLoginSection").innerHTML = `
+                    <span>Signed in as: <b>${loggedInUser}</b> | 
+                    <a href="#" id="logoutButton">Logout</a></span>
+                `;
+
+                document.getElementById("logoutButton").addEventListener("click", function() {
+                    localStorage.removeItem("loggedInUser");
+                    window.location.href = "login.html";
+                });
+            }
+        })
+        .catch(error => console.error("Error loading header:", error));
     </script>
 
 </body>
