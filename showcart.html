@@ -13,7 +13,7 @@
         }
 
         table {
-            width: 100%;
+            width: 100% !important;
             border-collapse: collapse;
             background-color: #F2F2F2;
             margin-top: 20px;
@@ -27,7 +27,13 @@
 
         th {
             background-color: #7FBFB0;
-            color: black;
+            color: white;
+        }
+
+        .hd-h1, .hd-h2 {
+            font-family: Georgia, serif !important;
+            padding-top: 20px !important;
+            padding-left: 10px !important;
         }
 
         .cart-buttons {
@@ -42,6 +48,10 @@
             border: none;
             padding: 5px 10px;
             cursor: pointer;
+        }
+
+        .update-btn:hover, .remove-btn:hover {
+            background-color: #5078A1;
         }
     </style>
 </head>
@@ -109,7 +119,7 @@
         }
 
         loadCart();
-        
+
         fetch("header.html")
             .then(response => response.text())
             .then(data => {
@@ -131,6 +141,10 @@
         .catch(error => console.error("Error loading header:", error));
 
     </script>
+
+    <h2 class=hd-h2><a href="checkout.html">Check Out</a></h2>
+
+    <h2 class=hd-h2><a href="listprod.html">Continue Shopping</a></h2>
 
 </body>
 </html>
