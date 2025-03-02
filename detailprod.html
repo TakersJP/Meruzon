@@ -3,158 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meruzon - Product Detail</title>
+    <link href="css/style.css" rel="stylesheet">
+    <title>Product Detail</title>
     
     <style>
         body {
             font-family: Georgia, serif !important;
             margin: 20px !important;
+            background-color: #f9f9f9;
+            color: black;
         }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-img {
+            display: block;
+            margin: 20px auto;
+            max-width: 250px;
+            height: auto;
+            border-radius: 5px;
+        }
+
         table {
-            font-family: Georgia, serif !important;
-            font-size: 20px !important;
             width: 100%;
             border-collapse: collapse;
             background-color: #F2F2F2;
             margin-top: 20px;
             color: black;
         }
+
         th, td {
             border: 1px solid #dddddd;
             text-align: left;
-            padding: 8px;
+            padding: 10px;
+            font-size: 16px;
         }
+
         th {
             background-color: #7FBFB0;
             color: white;
         }
-        .form-fm {
-            padding-top: 20px !important;
-            padding-left: 10px !important;
-        }
-        .col-md-1 {
-            width: 150px;
-        }
-        .img {
-            max-height: 200px;
-        }
-        .category-select {
-            font-size: 16px;
-            padding: 5px;
-        }
-        .search-box {
-            font-size: 16px;
-            padding: 5px;
-            width: 200px;
-        }
-        .product-info {
-            margin-bottom: 10px; /* Add margin between the table and the element below */
-        }
+
         .cart-section {
-            margin-bottom: 10px; /* Add margin between the cart section and the element below */
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+
+        .cart-section input {
+            width: 50px;
+            text-align: center;
+            font-size: 16px;
+        }
+
         .add-to-cart {
             background-color: #638AB4;
-            color: #FFFFFF;
+            color: white;
             border: none;
-            padding: 10px;
+            padding: 10px 15px;
             cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
         }
+
         .add-to-cart:hover {
             background-color: #5078A1;
         }
-        /* Review Submission form styling */
-        .review-form {
-            margin-top: 20px;  /* Top margin for the entire form */
-            margin-bottom: 20px; /* Bottom margin for the entire form */
-        }
-        /* Make form labels block-level (except the Rate row, which is handled by flexbox) */
-        .review-form label {
-            display: block;      /* Convert the label to a block element */
-            margin-bottom: 5px;  /* Add margin between the label and the input field */
-        }
-        /* Rate row: arrange horizontally with flexbox */
-        .form-row {
-            display: flex;
-            align-items: center; 
-            gap: 10px;           /* Set spacing between elements  */
-            margin-bottom: 10px;
-        }
-        /* Set the Rate input field individually (width may be unnecessary due to horizontal layout) */
-        #reviewRate {
-            width: 60px;
-            padding: 5px;
-        }
-        
-        /* Comment textarea's style */
-        #reviewComment {
-            width: 50%;           /* 50% of the form */
-            padding: 5px;
-            margin-bottom: 10px;
+
+        .continue-shopping {
+            margin-top: 15px;
         }
 
-        /* Submit Button's margin */
-        .review-form button {
-            margin-top: 10px;    /* Add top margin to the button */
-            padding: 8px 16px;   /* Add padding inside the button */
+        .continue-shopping a {
+            text-decoration: none;
+            font-size: 16px;
+            color: #638AB4;
         }
-        
+
+        .continue-shopping a:hover {
+            text-decoration: underline;
+        }
+
+        .review-section {
+            margin-top: 30px;
+        }
+
+        .review-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .review-table th, .review-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .review-table th {
+            background-color: #7FBFB0;
+            color: white;
+        }
+
+        .review-form {
+            margin-top: 20px;
+        }
+
+        .review-form input, .review-form textarea {
+            width: 50%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: block;
+        }
+
+        .review-form button {
+            background-color: #7FBFB0;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .review-form button:hover {
+            background-color: #66A099;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header section -->
-    <div id="header">
-        <h1>Meruzon</h1>
-        <nav>
-            <a href="listprod.html">Begin Shopping (backとかのがいいかも) (場所も調整する)</a>
-        </nav>
-    </div>
+    <!-- Header -->
+    <div id="header"></div>
 
-    <!-- Main content -->
-    <main>
-        <!-- Product details section -->
-        <section class="product-detail">
-            <!-- Product name -->
-            <h2 id="productName">Product Name</h2>
+    <div class="container">
+        <h2 id="productName">Handmade Beaded Earrings</h2>
+        <p><strong>Description:</strong> <span id="productDescription">Beautiful handmade earrings made with high-quality beads. A perfect accessory to brighten your outfit.</span></p>
 
-            <!-- Product description -->
-            <!-- <p id="productDescription">This is the product description. It provides details about the handmade product.</p> -->
-            <p><strong>Description:</strong> <span id="productDescription">This is the product description. It provides details about the handmade product.</span></p>
-
-            <!-- Product Image -->
-            <img id="productImage" src="img/sample.jpg" alt="Product Image" style="max-width:300px;" class="img">
-            
-            <!-- Product ID & Price (Table) -->
-            <table class="product-info">
-                <tr>
-                    <th>Id</th>
-                    <td><span id="productId">xx</span></td>
-                </tr>
-                <tr>
-                    <th>Price</th>
-                    <td>$<span id="productPrice">xx.xx</span></td>
-                </tr>
-            </table>  
-            
-            <!-- Quantity choice & Add to Cart Button -->
-            <div class="cart-section">
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" value="1" min="1">
-                <button class="add-to-cart" id="addToCartBtn">Add to Cart</button>
-            </div>
-            
-            <!-- Continue Shopping (Text link) -->
-            <p id="continueShopping">
-                <a href="listprod.html">Continue Shopping</a>
-            </p>
-
-        </section>
+        <img id="productImage" src="img/sample.jpg" alt="Product Image" class="product-img">
         
-        <!-- Reviews section -->
-        <section class="review-list">
+        <table>
+            <tr>
+                <th>Id</th>
+                <td><span id="productId">1</span></td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>$<span id="productPrice">15.00</span></td>
+            </tr>
+        </table>  
+
+        <div class="cart-section">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" value="1" min="1">
+            <button class="add-to-cart" id="addToCartBtn">Add to Cart</button>
+        </div>
+        
+        <div class="continue-shopping">
+            <a href="listprod.html">Continue Shopping</a>
+        </div>
+
+        <div class="review-section">
             <h3>Reviews</h3>
-            <table>
+            <table class="review-table">
                 <thead>
                     <tr>
                         <th>Rate</th>
@@ -162,167 +183,27 @@
                         <th>Comment</th>
                     </tr>
                 </thead>
-                <tbody id="reviewTable">
-                    <!-- Reviews will be inserted dynamically via JavaScript -->
-                </tbody>
+                <tbody id="reviewTable"></tbody>
             </table>
-        </section>
-        
+        </div>
 
-        <!-- Add Review  Text link -->
-        <!-- <p id="addReview">
-            <a href="review.html">Add Review</a>
-        </p> -->
-
-        <!-- Add Review form -->
-        <section class="review-form">
+        <div class="review-form">
             <h3>Add Review</h3>
-            <form id="reviewForm">
-                <!-- Review Rate(1-5) -->                
-                <!-- Rate row: arranged horizontally with flexbox -->
-                <div class="form-row">
-                    <label for="reviewRate">Rate (1-5):</label>
-                    <input type="number" id="reviewRate" min="1" max="5" required>
-                </div>
-                <!-- Comment: label and textarea in vertical arrangement -->
-                <label for="reviewComment">Comment:</label>
-                <textarea id="reviewComment" required></textarea>
-                <br>
-                <!-- Submit Button -->
-                <button type="submit">Submit Review</button>
-            </form>
-        </section>
-    </main>
+            <input type="number" id="reviewRate" min="1" max="5" placeholder="Rate (1-5)" required>
+            <textarea id="reviewComment" placeholder="Write your review..." required></textarea>
+            <button type="submit" id="submitReviewBtn">Submit Review</button>
+        </div>
+    </div>
 
     <script>
-        // ============================
-        // Define products array (sample data)
-        // ============================
-        const products = [
-            { id: 1, name: "Handmade Beaded Earrings", price: 15.00, category: "Accessories", image: "img/earrings.jpg", description: "Beautiful handmade earrings made with high quality beads. A perfect accessory to brighten your outfit." },
-            { id: 2, name: "Leather Bracelet",         price: 18.00, category: "Accessories", image: "img/bracelet.jpg", description: "A stylish leather bracelet." },
-            { id: 3, name: "Resin Pendant Necklace",   price: 22.00, category: "Accessories", image: "img/pendant.jpg",  description: "A unique resin pendant necklace." },
-            { id: 4, name: "Minimalist Tote Bag",      price: 25.00, category: "Lifestyle Goods", image: "img/totebag.jpg", description: "A minimalist tote bag perfect for everyday use." },
-            { id: 5, name: "Scented Candle",           price: 12.00, category: "Lifestyle Goods", image: "img/candle.jpg", description: "A scented candle to create a cozy atmosphere." },
-            { id: 6, name: "Wooden Coaster Set",       price: 20.00, category: "Lifestyle Goods", image: "img/coasters.jpg", description: "A set of wooden coasters." },
-            { id: 7, name: "Ceramic Coffee Mug",       price: 18.00, category: "Ceramics & Glass Crafts", image: "img/coffeemug.jpg", description: "A handmade ceramic coffee mug." },
-            { id: 8, name: "Glass Vase",               price: 40.00, category: "Ceramics & Glass Crafts", image: "img/vase.jpg", description: "An elegant glass vase." },
-            { id: 9, name: "Hand-Painted Plate",       price: 35.00, category: "Ceramics & Glass Crafts", image: "img/plate.jpg", description: "A hand-painted decorative plate." },
-            { id: 10, name: "Knitted Scarf",           price: 30.00, category: "Knitted Goods", image: "img/scarf.jpg", description: "A warm knitted scarf." },
-            { id: 11, name: "Wool Mittens",            price: 20.00, category: "Knitted Goods", image: "img/mittens.jpg", description: "Cozy wool mittens." },
-            { id: 12, name: "Crocheted Beanie",        price: 28.00, category: "Knitted Goods", image: "img/beanie.jpg", description: "A crocheted beanie for winter." },
-            { id: 13, name: "DIY Beading Kit",         price: 12.00, category: "Craft Supplies & Tools", image: "img/beadingkit.jpg", description: "A DIY beading kit for beginners." },
-            { id: 14, name: "Embroidery Starter Set",  price: 15.00, category: "Craft Supplies & Tools", image: "img/embroidery.jpg", description: "A starter set for embroidery." },
-            { id: 15, name: "Basic Sewing Kit",        price: 10.00, category: "Craft Supplies & Tools", image: "img/sewingkit.jpg", description: "A basic sewing kit with essentials." }
-        ];     
-        
-        // ============================
-        // Define reviewsByProduct: reviews for each product (using product ID as key)
-        // ============================
-        const reviewsByProduct = {
-            1: [
-                { rate: 4, date: "2024-12-06 02:11:29.46", comment: "Really nice product!" },
-                { rate: 5, date: "2024-12-07 10:05:12.00", comment: "Absolutely loved it!" }
-            ],
-            // For other products, initial reviews are set as empty arrays (reviews will be added later)
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-            6: [],
-            7: [],
-            8: [],
-            9: [],
-            10: [],
-            11: [],
-            12: [],
-            13: [],
-            14: [],
-            15: []
-        };
+        let reviews = [
+            { rate: 4, date: "2024-12-06", comment: "Really nice product!" },
+            { rate: 5, date: "2024-12-07", comment: "Absolutely loved it!" }
+        ];
 
-        // Global variables for current product reviews and product ID
-        let reviews = [];
-        let currentProductId = null;
-
-        
-        // ============================
-        // On page load: retrieve product ID from URL and initialize page
-        // ============================
-        window.onload = function() {
-            // Get product ID from URL parameters
-            const params = new URLSearchParams(window.location.search);
-            const productId = parseInt(params.get("id"));
-            currentProductId = productId; // store for later use
-    
-            // Find the product with the matching ID
-            const product = products.find(p => p.id === productId);
-    
-            if (product) {
-                // Populate product details
-                document.getElementById("productName").textContent = product.name;
-                document.getElementById("productId").textContent = product.id;
-                document.getElementById("productPrice").textContent = product.price.toFixed(2);
-                document.getElementById("productDescription").textContent = product.description;
-                document.getElementById("productImage").src = product.image;
-    
-                // Retrieve reviews for this product from reviewsByProduct object (or empty array if none)
-                reviews = reviewsByProduct[productId] || [];
-            } else {
-                // If no product found, display an error message
-                document.getElementById("productName").textContent = "Product not found!";
-            }
-    
-            // Display the reviews for the current product
-            displayReviews();
-    
-            // Add event listener for the Add to Cart button
-            document.getElementById("addToCartBtn").addEventListener("click", function() {
-                if (!product) return;
-                const quantity = parseInt(document.getElementById("quantity").value) || 1;
-                addToCart(product.id, quantity);
-            });
-
-            // Add event listener for the review submission form
-            document.getElementById("reviewForm").addEventListener("submit", function(event) {
-                event.preventDefault();
-                addReview();
-            });
-        };
-
-
-        // ============================
-        // Add to Cart  function
-        // ============================
-        function addToCart(productId, quantity = 1) {
-            // Retrieve existing cart data from localStorage (return an empty array if not found)
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            
-            // Check if the same product is already in the cart
-            const existingItem = cart.find(item => item.id === productId);
-            if (existingItem) {
-                // If the product exists, add to its quantity
-                existingItem.quantity += quantity;
-            } else {
-                // Otherwise, add the product as a new item to the cart
-                cart.push({ id: productId, quantity: quantity });
-            }
-            
-            // Save the updated cart data back to localStorage
-            localStorage.setItem("cart", JSON.stringify(cart));
-            
-            alert("Item added to cart!");
-        }
-        
-
-
-
-        // ============================
-        // Display Reviews function
-        // ============================
         function displayReviews() {
             const reviewTable = document.getElementById("reviewTable");
-            reviewTable.innerHTML = "";  // Clear existing content
+            reviewTable.innerHTML = "";  
             
             reviews.forEach(review => {
                 const row = document.createElement("tr");
@@ -331,29 +212,36 @@
             });
         }
 
-        // ============================
-        // Add Review function
-        // ============================
-        function addReview() {
-            const rate = parseInt(document.getElementById("reviewRate").value);
-            const comment = document.getElementById("reviewComment").value;
-            const now = new Date();
-            const formattedDate = now.toISOString().slice(0, 19).replace("T", " ");
-            const newReview = { rate: rate, date: formattedDate, comment: comment };
-    
-            // Add the new review to the current product's reviews
-            reviews.push(newReview);
-    
-            // Update the reviewsByProduct object for persistence
-            reviewsByProduct[currentProductId] = reviews;
-    
-            // Refresh the displayed review list
-            displayReviews();
-    
-            // Reset the review form
-            document.getElementById("reviewForm").reset();
-        }
-    </script>
+        document.getElementById("submitReviewBtn").addEventListener("click", function() {
+            let rate = document.getElementById("reviewRate").value;
+            let comment = document.getElementById("reviewComment").value;
+            let date = new Date().toISOString().split("T")[0];
 
+            if (!rate || !comment) {
+                alert("Please fill out both fields.");
+                return;
+            }
+
+            reviews.push({ rate, date, comment });
+            displayReviews();
+
+            document.getElementById("reviewRate").value = "";
+            document.getElementById("reviewComment").value = "";
+        });
+
+        document.getElementById("addToCartBtn").addEventListener("click", function() {
+            let quantity = document.getElementById("quantity").value;
+            alert(`Added ${quantity} item(s) to the cart!`);
+        });
+
+        displayReviews();
+        
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header").innerHTML = data;
+            })
+            .catch(error => console.error("Error loading header:", error));
+    </script>
 </body>
 </html>

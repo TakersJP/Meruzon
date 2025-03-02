@@ -10,16 +10,16 @@
         body {
             font-family: Georgia, serif !important;
             margin: 20px !important;
+            background-color: #f9f9f9;
         }
 
         h1, h3, label, p {
             color: black;
         }
 
-
         table {
             font-family: Georgia, serif !important;
-            font-size: 20px !important;
+            font-size: 18px;
             width: 100%;
             border-collapse: collapse;
             background-color: #F2F2F2;
@@ -28,27 +28,14 @@
         }
 
         th, td {
-            border: 1px solid #dddddd;
+            border: 1px solid #ddd;
             text-align: left;
-            padding: 8px;
+            padding: 10px;
         }
 
         th {
             background-color: #7FBFB0;
             color: white;
-        }
-
-        .form-fm {
-            padding-top: 20px !important;
-            padding-left: 10px !important;
-        }
-
-        .col-md-1 {
-            width: 150px;
-        }
-
-        .img {
-            max-height: 200px;
         }
 
         .category-select {
@@ -64,15 +51,26 @@
 
         .add-to-cart {
             background-color: #638AB4;
-            color: #FFFFFF;
+            color: white;
             border: none;
-            padding: 10px;
+            padding: 8px 12px;
             cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
         }
 
         .add-to-cart:hover {
             background-color: #5078A1;
         }
+
+        .img {
+            max-width: 120px;
+            height: auto;
+            display: block;
+            margin: auto;
+            border-radius: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -81,7 +79,7 @@
 
     <h1>Browse Products By Category and Search by Product Name:</h1>
 
-    <form class="form-fm" onsubmit="event.preventDefault(); filterProducts();">
+    <form onsubmit="event.preventDefault(); filterProducts();">
         <p align="left">
             <select id="categoryFilter" class="category-select" onchange="filterProducts()">
                 <option value="All">All</option>
@@ -100,10 +98,10 @@
 
     <h3>All Products</h3>
 
-    <table class="table">
+    <table>
         <thead>
             <tr>
-                <th class="col-md-1"></th>
+                <th></th>
                 <th>Product Name</th>
                 <th>Product Image</th>
                 <th>Category</th>
@@ -115,26 +113,24 @@
 
     <script>
         const products = [
-            { id: 1,  name: "Handmade Beaded Earrings", price: 15.00, category: "Accessories",              image: "img/earrings.jpg" },
-            { id: 2,  name: "Leather Bracelet",         price: 18.00, category: "Accessories",              image: "img/bracelet.jpg" },
-            { id: 3,  name: "Resin Pendant Necklace",   price: 22.00, category: "Accessories",              image: "img/pendant.jpg" },
-
-            { id: 4,  name: "Minimalist Tote Bag",      price: 25.00, category: "Lifestyle Goods",          image: "img/totebag.jpg" },
-            { id: 5,  name: "Scented  Candle",          price: 12.00, category: "Lifestyle Goods",          image: "img/candle.jpg" },
-            { id: 6,  name: "Wooden Coaster Set",       price: 20.00, category: "Lifestyle Goods",          image: "img/coasters.jpg" },
-
-            { id: 7,  name: "Ceramic Coffee Mug",       price: 18.00, category: "Ceramics & Glass Crafts",  image: "img/coffeemug.jpg" },
-            { id: 8,  name: "Glass Vase",               price: 40.00, category: "Ceramics & Glass Crafts",  image: "img/vase.jpg" },
-            { id: 9,  name: "Hand-Painted Plate",       price: 35.00, category: "Ceramics & Glass Crafts",  image: "img/plate.jpg" },
-
-            { id: 10, name: "Knitted Scarf",            price: 30.00, category: "Knitted Goods",            image: "img/scarf.jpg" },
-            { id: 11, name: "Wool Mittens",             price: 20.00, category: "Knitted Goods",            image: "img/mittens.jpg" },
-            { id: 12, name: "Crocheted Beanie",         price: 28.00, category: "Knitted Goods",            image: "img/beanie.jpg" },
-
-            { id: 13, name: "DIY Beading Kit",          price: 12.00, category: "Craft Supplies & Tools",   image: "img/beadingkit.jpg" },
-            { id: 14, name: "Embroidery Starter Set",   price: 15.00, category: "Craft Supplies & Tools",   image: "img/embroidery.jpg" },
-            { id: 15, name: "Basic Sewing Kit",         price: 10.00, category: "Craft Supplies & Tools",   image: "img/sewingkit.jpg" }
+            { id: 1, name: "Handmade Beaded Earrings", price: 15.00, category: "Accessories", image: "img/earrings.jpg" },
+            { id: 2, name: "Leather Bracelet", price: 18.00, category: "Accessories", image: "img/bracelet.jpg" },
+            { id: 3, name: "Resin Pendant Necklace", price: 22.00, category: "Accessories", image: "img/pendant.jpg" },
+            { id: 4, name: "Minimalist Tote Bag", price: 25.00, category: "Lifestyle Goods", image: "img/totebag.jpg" },
+            { id: 5, name: "Scented Candle", price: 12.00, category: "Lifestyle Goods", image: "img/candle.jpg" },
+            { id: 6, name: "Wooden Coaster Set", price: 20.00, category: "Lifestyle Goods", image: "img/coasters.jpg" },
+            { id: 7, name: "Ceramic Coffee Mug", price: 18.00, category: "Ceramics & Glass Crafts", image: "img/coffeemug.jpg" },
+            { id: 8, name: "Glass Vase", price: 40.00, category: "Ceramics & Glass Crafts", image: "img/vase.jpg" },
+            { id: 9, name: "Hand-Painted Plate", price: 35.00, category: "Ceramics & Glass Crafts", image: "img/plate.jpg" },
+            { id: 10, name: "Knitted Scarf", price: 30.00, category: "Knitted Goods", image: "img/scarf.jpg" },
+            { id: 11, name: "Wool Mittens", price: 20.00, category: "Knitted Goods", image: "img/mittens.jpg" },
+            { id: 12, name: "Crocheted Beanie", price: 28.00, category: "Knitted Goods", image: "img/beanie.jpg" },
+            { id: 13, name: "DIY Beading Kit", price: 12.00, category: "Craft Supplies & Tools", image: "img/beadingkit.jpg" },
+            { id: 14, name: "Embroidery Starter Set", price: 15.00, category: "Craft Supplies & Tools", image: "img/embroidery.jpg" },
+            { id: 15, name: "Basic Sewing Kit", price: 10.00, category: "Craft Supplies & Tools", image: "img/sewingkit.jpg" }
         ];
+
+        let cart = []; // Stores cart items in an array instead of JSON
 
         function displayProducts(filteredProducts = products) {
             const tableBody = document.getElementById("productTable");
@@ -144,12 +140,10 @@
                 const row = document.createElement("tr");
 
                 row.innerHTML = `
-                    <td class="col-md-1" style="text-align: center;">
+                    <td style="text-align: center;">
                         <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
                     </td>
-                    <td>
-                        <a href="detailprod.html?id=${product.id}">${product.name}</a>
-                    </td>
+                    <td><a href="detailprod.html?id=${product.id}">${product.name}</a></td>
                     <td><img class="img" src="${product.image}" alt="${product.name}"></td>
                     <td>${product.category}</td>
                     <td>$${product.price.toFixed(2)}</td>
@@ -178,48 +172,27 @@
         }
 
         function addToCart(productId, quantity = 1) {
-            // Retrieve existing cart data from localStorage (default to an empty array if not found)
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            
-            // Check if the same product already exists in the cart
-            const existingItem = cart.find(item => item.id === productId);
+            let product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            let existingItem = cart.find(item => item.id === productId);
             if (existingItem) {
-                // Update the quantity for the existing product
                 existingItem.quantity += quantity;
             } else {
-                // Add the product as a new item in the cart
-                cart.push({ id: productId, quantity: quantity });
+                cart.push({ id: productId, name: product.name, quantity: quantity });
             }
-            
-            // Save the updated cart data back to localStorage
-            localStorage.setItem("cart", JSON.stringify(cart));
-            
-            // Display an alert for confirmation (this can be modified later to show the cart page.)
-            const product = products.find(p => p.id === productId);
+
             alert(`Added "${product.name}" to cart!`);
-        }        
+        }
 
         displayProducts();
 
         fetch("header.html")
             .then(response => response.text())
             .then(data => {
-            document.getElementById("header").innerHTML = data;
-
-            let loggedInUser = localStorage.getItem("loggedInUser");
-            if (loggedInUser) {
-                document.getElementById("userLoginSection").innerHTML = `
-                    <span>Signed in as: <b>${loggedInUser}</b> | 
-                    <a href="#" id="logoutButton">Logout</a></span>
-                `;
-
-                document.getElementById("logoutButton").addEventListener("click", function() {
-                    localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.html";
-                });
-            }
-        })
-        .catch(error => console.error("Error loading header:", error));
+                document.getElementById("header").innerHTML = data;
+            })
+            .catch(error => console.error("Error loading header:", error));
     </script>
 
 </body>
