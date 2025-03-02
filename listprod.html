@@ -123,6 +123,8 @@
             { id: 15, name: "Basic Sewing Kit", price: 10.00, category: "Craft Supplies & Tools", image: "img/sewingkit.jpg" }
         ];
 
+        
+
         function displayProducts(filteredProducts = products) {
             const tableBody = document.getElementById("productTable");
             tableBody.innerHTML = "";
@@ -157,6 +159,26 @@
 
             alert(`Added "${name}" to cart!`);
         }
+
+        function filterProducts() {
+            const category = document.getElementById("categoryFilter").value;
+            const searchText = document.getElementById("productSearch").value.toLowerCase().trim(); // Convert search text to lowercase
+
+            const filteredProducts = products.filter(product => {
+                const matchesCategory = category === "All" || product.category === category;
+                const matchesSearch = product.name.toLowerCase().includes(searchText);
+                return matchesCategory && matchesSearch;
+            });
+
+            displayProducts(filteredProducts);
+        }
+
+        function resetFilters() {
+            document.getElementById("categoryFilter").value = "All";
+            document.getElementById("productSearch").value = "";
+            displayProducts();
+        }
+
 
         displayProducts();
 
