@@ -147,12 +147,13 @@
                     <td class="col-md-1" style="text-align: center;">
                         <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
                     </td>
-                    <td>${product.name}</td>
+                    <td>
+                        <a href="detailprod.html?id=${product.id}">${product.name}</a>
+                    </td>
                     <td><img class="img" src="${product.image}" alt="${product.name}"></td>
                     <td>${product.category}</td>
                     <td>$${product.price.toFixed(2)}</td>
                 `;
-
                 tableBody.appendChild(row);
             });
         }
@@ -176,10 +177,27 @@
             displayProducts();
         }
 
-        function addToCart(productId) {
+        function addToCart(productId, quantity = 1) {
+            // Retrieve existing cart data from localStorage (default to an empty array if not found)
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            
+            // Check if the same product already exists in the cart
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                // Update the quantity for the existing product
+                existingItem.quantity += quantity;
+            } else {
+                // Add the product as a new item in the cart
+                cart.push({ id: productId, quantity: quantity });
+            }
+            
+            // Save the updated cart data back to localStorage
+            localStorage.setItem("cart", JSON.stringify(cart));
+            
+            // Display an alert for confirmation (this can be modified later to show the cart page.)
             const product = products.find(p => p.id === productId);
             alert(`Added "${product.name}" to cart!`);
-        }
+        }        
 
         displayProducts();
 
