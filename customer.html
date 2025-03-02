@@ -76,9 +76,22 @@
         fetch("header.html")
             .then(response => response.text())
             .then(data => {
-                document.getElementById("header").innerHTML = data;
-            })
-            .catch(error => console.error("Error loading header:", error));
+            document.getElementById("header").innerHTML = data;
+
+            let loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                document.getElementById("userLoginSection").innerHTML = `
+                    <span>Signed in as: <b>${loggedInUser}</b> | 
+                    <a href="#" id="logoutButton">Logout</a></span>
+                `;
+
+                document.getElementById("logoutButton").addEventListener("click", function() {
+                    localStorage.removeItem("loggedInUser");
+                    window.location.href = "login.html";
+                });
+            }
+        })
+        .catch(error => console.error("Error loading header:", error));
         document.addEventListener("DOMContentLoaded", function() {
             let fields = ["customerId", "firstName", "lastName", "email", "phone", 
                           "address", "city", "state", "postalCode", "country"];

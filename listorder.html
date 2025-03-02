@@ -89,13 +89,24 @@
   <script>
     // 1. Load the header via fetch
     fetch("header.html")
-      .then(function(response) { return response.text(); })
-      .then(function(data) {
-        document.getElementById("header").innerHTML = data;
-      })
-      .catch(function(error) {
-        console.error("Error loading header:", error);
-      });
+            .then(response => response.text())
+            .then(data => {
+            document.getElementById("header").innerHTML = data;
+
+            let loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                document.getElementById("userLoginSection").innerHTML = `
+                    <span>Signed in as: <b>${loggedInUser}</b> | 
+                    <a href="#" id="logoutButton">Logout</a></span>
+                `;
+
+                document.getElementById("logoutButton").addEventListener("click", function() {
+                    localStorage.removeItem("loggedInUser");
+                    window.location.href = "login.html";
+                });
+            }
+        })
+        .catch(error => console.error("Error loading header:", error));
 
     /*
       2. Manage order information using pure JavaScript objects/arrays.
