@@ -139,7 +139,7 @@ session_start();
                     <td style="text-align: center;">
                         <button class="add-to-cart" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">Add to Cart</button>
                     </td>
-                    <td><a href="detailprod.html?id=${product.id}">${product.name}</a></td>
+                    <td><a href="detailprod.php?id=${product.id}">${product.name}</a></td>
                     <td><img class="img" src="${product.image}" alt="${product.name}"></td>
                     <td>${product.category}</td>
                     <td>$${product.price.toFixed(2)}</td>

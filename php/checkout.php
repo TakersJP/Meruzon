@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
-    <link href="css/style.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
 
     <style>
         body {
@@ -62,20 +62,12 @@
 
     <div id="header"></div>
 
-    <h1 class="hd-h1">Enter your Customer ID and Payment Information to Complete the Transaction:</h1>
+    <h1 class="hd-h1">Enter your Payment Information to Complete the Transaction:</h1>
 
     <div class="checkout-container">
         <form class="checkout-form" id="checkoutForm">
             <table>
                 <tbody>
-                    <tr>
-                        <td><label for="customerId">Customer ID:</label></td>
-                        <td><input type="text" id="customerId" required></td>
-                    </tr>
-                    <tr>
-                        <td><label for="password">Password:</label></td>
-                        <td><input type="password" id="password" required></td>
-                    </tr>
                     <tr>
                         <td><label>Payment Type:</label></td>
                         <td>
@@ -111,14 +103,12 @@
         document.getElementById("checkoutForm").addEventListener("submit", function(event) {
             event.preventDefault(); 
 
-            let customerId = document.getElementById("customerId").value.trim();
-            let password = document.getElementById("password").value.trim();
             let paymentType = document.querySelector("input[name='paymentType']:checked")?.value;
             let paymentNumber = document.getElementById("paymentNumber").value.trim();
             let paymentExpiryDate = document.getElementById("paymentExpiryDate").value.trim();
             let errorMessage = document.getElementById("errorMessage");
 
-            if (!customerId || !password || !paymentType || !paymentNumber || !paymentExpiryDate) {
+            if (!paymentType || !paymentNumber || !paymentExpiryDate) {
                 errorMessage.textContent = "All fields are required!";
                 errorMessage.style.display = "block";
                 return;
@@ -136,16 +126,15 @@
                 return;
             }
 
-            localStorage.setItem("customerId", customerId);
             localStorage.setItem("paymentType", paymentType);
             localStorage.setItem("paymentNumber", paymentNumber);
             localStorage.setItem("paymentExpiryDate", paymentExpiryDate);
             localStorage.setItem("orderDate", new Date().toLocaleString());
 
-            window.location.href = "order-confirmation.html";
+            window.location.href = "order-confirmation.php";
         });
 
-        fetch("header.html")
+        fetch("header.php")
             .then(response => response.text())
             .then(data => {
             document.getElementById("header").innerHTML = data;
@@ -159,7 +148,7 @@
 
                 document.getElementById("logoutButton").addEventListener("click", function() {
                     localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.html";
+                    window.location.href = "login.php";
                 });
             }
         })

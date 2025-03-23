@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Profile</title>
-    <link href="css/style.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
     
     <style>
         body {
@@ -73,7 +73,7 @@
     </div>
 
     <script>
-        fetch("header.html")
+        fetch("header.php")
             .then(response => response.text())
             .then(data => {
             document.getElementById("header").innerHTML = data;
@@ -87,7 +87,7 @@
 
                 document.getElementById("logoutButton").addEventListener("click", function() {
                     localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.html";
+                    window.location.href = "login.php";
                 });
             }
         })
