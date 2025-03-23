@@ -89,11 +89,13 @@ $conn->close();
         <button type="submit">Update Profile Image</button>
     </form>
 
-    <?php if (!empty($user['profile_image']) && file_exists($user['profile_image'])): ?>
-        <img src="<?php echo htmlspecialchars($user['profile_image']); ?>" alt="Profile Image" class="profile-pic">
-    <?php else: ?>
-        <img src="../img/default-profile.png" alt="Default Profile" class="profile-pic">
-    <?php endif; ?>
+    <?php 
+        $profilePic = (!empty($user['profile_image']) && file_exists($user['profile_image'])) 
+            ? '../' . ltrim($user['profile_image'], '/') 
+            : '../img/default-profile.png';
+        ?>
+    <img src="<?php echo htmlspecialchars($profilePic); ?>" alt="Profile Image" class="profile-pic">
+
 
     <table>
         <tr><th>ID</th><td><?php echo htmlspecialchars($user['user_id']); ?></td></tr>

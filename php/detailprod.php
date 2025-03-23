@@ -1,5 +1,5 @@
 <?php
-include("config.php"); // Connects to your database
+include("config.php"); // Connects to database
 
 $item_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $product = null;
@@ -163,7 +163,7 @@ if ($item_id > 0) {
     <?php if ($product): ?>
         <h2><?php echo htmlspecialchars($product['product_name']); ?></h2>
 
-        <!-- Product Image (Optional: change based on product name) -->
+        
         <img id="productImage" src="../img/<?php echo htmlspecialchars($product['product_image']); ?>" alt="Product Image" class="product-img" onerror="this.onerror=null;this.src='../img/sample.jpg';">
 
 
