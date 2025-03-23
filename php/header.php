@@ -4,7 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include 'config.php';
 
-$profileImage = "../img/default-profile.png"; // default
+$profileImage = "../img/default-profile.png"; // fallback default
+
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
     $stmt = $conn->prepare("SELECT profile_image FROM users WHERE username = ?");
@@ -14,11 +15,12 @@ if (isset($_SESSION['username'])) {
     $stmt->fetch();
     $stmt->close();
 
-    if (!empty($profileImagePath) && file_exists($profileImagePath)) {
-        $profileImage = "../" . ltrim($profileImagePath, '/'); 
+    // Check if the image exists by using absolute path
+    $fullImagePath = __DIR__ . "/../" . $profileImagePath;
+    if (!empty($profileImagePath) && file_exists(__DIR__ . '/' . $profileImagePath)) {
+        $profileImage = "../php/" . ltrim($profileImagePath, '/'); 
     }
 }
-
 ?>
 <header>
     <img src="../img/store_logo.png" alt="Logo">
@@ -34,7 +36,17 @@ if (isset($_SESSION['username'])) {
         <a href="showcart.php">Cart</a>
         <span id="userLoginSection" style="display: flex; align-items: center; gap: 10px;">
         <?php if (isset($_SESSION['username'])): ?>
-            <img src="<?php echo $profileImage ? $profileImage : '../img/default-profile.png'; ?>" alt="Profile Image" width="40" height="40" style="border-radius: 50%; vertical-align: middle; margin-right: 8px;">
+            <img 
+            src="<?php echo $profileImage; ?>" 
+            alt="Profile Image" 
+            style="
+                width: 40px; 
+                height: 40px; 
+                border-radius: 50%; 
+                object-fit: cover; 
+                vertical-align: middle; 
+                margin-right: 8px;
+            ">
             <span style="color: white;">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span> |
             <a href="logout.php" style="color: white;">Logout</a>
         <?php else: ?>

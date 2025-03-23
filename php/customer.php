@@ -90,11 +90,18 @@ $conn->close();
     </form>
 
     <?php 
-        $profilePic = (!empty($user['profile_image']) && file_exists($user['profile_image'])) 
-            ? '../' . ltrim($user['profile_image'], '/') 
+        // Build absolute server path for file_exists
+        $absolutePath = __DIR__ . '/' . $user['profile_image'];
+        // Build the browser path for <img> tag
+        $browserPath  = $user['profile_image']; 
+
+        // Then the final $profilePic for <img src>:
+        $profilePic = (!empty($user['profile_image']) && file_exists($absolutePath))
+            ? '../php/' . ltrim($browserPath, '/')
             : '../img/default-profile.png';
-        ?>
+    ?>
     <img src="<?php echo htmlspecialchars($profilePic); ?>" alt="Profile Image" class="profile-pic">
+
 
 
     <table>
