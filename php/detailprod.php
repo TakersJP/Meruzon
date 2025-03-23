@@ -1,3 +1,18 @@
+<?php
+include("config.php"); // Connects to your database
+
+$item_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$product = null;
+
+if ($item_id > 0) {
+    $stmt = $conn->prepare("SELECT * FROM items WHERE item_id = ?");
+    $stmt->bind_param("i", $item_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $product = $result->fetch_assoc();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -142,31 +157,34 @@
     </style>
 </head>
 <body>
+<div id="header"></div>
 
-    <!-- Header -->
-    <div id="header"></div>
+<div class="container">
+    <?php if ($product): ?>
+        <h2><?php echo htmlspecialchars($product['product_name']); ?></h2>
 
-    <div class="container">
-        <h2 id="productName">Product Name</h2>
-        <p><strong>Description:</strong> <span id="productDescription"></span></p>
+        <!-- Product Image (Optional: change based on product name) -->
+        <img id="productImage" src="img/<?php echo htmlspecialchars($product['product_name']); ?>.png" alt="Product Image" class="product-img" onerror="this.onerror=null;this.src='img/sample.jpg';">
 
-        <!-- Product Image -->
-        <img id="productImage" src="img/sample.jpg" alt="Product Image" class="product-img">
-        
         <table>
             <tr>
-                <th>Id</th>
-                <td><span id="productId"></span></td>
+                <th>Product ID</th>
+                <td><span id="productId"><?php echo $product['item_id']; ?></span></td>
             </tr>
+
             <tr>
                 <th>Price</th>
-                <td>$<span id="productPrice"></span></td>
+                <td>$<?php echo number_format($product['price'], 2); ?></td>
+            </tr>
+            <tr>
+                <th>Stock Available</th>
+                <td><?php echo $product['quantity']; ?></td>
             </tr>
         </table>  
 
         <div class="cart-section">
             <label for="quantity">Quantity:</label>
-            <input type="number" id="quantity" value="1" min="1">
+            <input type="number" id="quantity" value="1" min="1" max="<?php echo $product['quantity']; ?>">
             <button class="add-to-cart" id="addToCartBtn">Add to Cart</button>
         </div>
         
@@ -174,6 +192,7 @@
             <a href="listprod.php">Continue Shopping</a>
         </div>
 
+        <!-- Reviews (static placeholder) -->
         <div class="review-section">
             <h3>Reviews</h3>
             <table class="review-table">
@@ -184,7 +203,8 @@
                         <th>Comment</th>
                     </tr>
                 </thead>
-                <tbody id="reviewTable"></tbody>
+                <tbody id="reviewTable">
+                </tbody>
             </table>
         </div>
 
@@ -194,117 +214,86 @@
             <textarea id="reviewComment" placeholder="Write your review..." required></textarea>
             <button type="submit" id="submitReviewBtn">Submit Review</button>
         </div>
-    </div>
+    <?php else: ?>
+        <h2>Product Not Found</h2>
+        <p>Sorry, the product you're looking for doesn't exist.</p>
+    <?php endif; ?>
+</div>
 
-    <script>
-        // (1) Define product data (15 items)
-        const products = [
-            { id: 1, name: "Handmade Beaded Earrings", description: "Beautiful handmade earrings made with high-quality beads. A perfect accessory to brighten your outfit.", price: 15.00, image: "img/earrings.png" },
-            { id: 2, name: "Leather Bracelet", description: "Handcrafted leather bracelet. Durable and stylish.", price: 18.00, image: "img/bracelet.png" },
-            { id: 3, name: "Resin Pendant Necklace", description: "A resin pendant necklace with a minimalistic design.", price: 22.00, image: "img/pendant.png" },
-            { id: 4, name: "Minimalist Tote Bag", description: "Spacious and durable tote bag for everyday use.", price: 25.00, image: "img/totebag.png" },
-            { id: 5, name: "Scented Candle", description: "Relaxing scented candle to lighten up your mood.", price: 12.00, image: "img/candle.png" },
-            { id: 6, name: "Wooden Coaster Set", description: "A set of wooden coasters for your favorite drinks.", price: 20.00, image: "img/coasters.png" },
-            { id: 7, name: "Ceramic Coffee Mug", description: "Handmade ceramic mug for your coffee and tea.", price: 18.00, image: "img/coffeemug.png" },
-            { id: 8, name: "Glass Vase", description: "Elegant glass vase for flowers or home decoration.", price: 40.00, image: "img/vase.png" },
-            { id: 9, name: "Hand-Painted Plate", description: "Uniquely hand-painted ceramic plate.", price: 35.00, image: "img/plate.png" },
-            { id: 10, name: "Knitted Scarf", description: "Warm and cozy knitted scarf.", price: 30.00, image: "img/scarf.png" },
-            { id: 11, name: "Wool Mittens", description: "Soft wool mittens for cold weather.", price: 20.00, image: "img/mittens.png" },
-            { id: 12, name: "Crocheted Beanie", description: "Stylish crocheted beanie for casual wear.", price: 28.00, image: "img/beanie.png" },
-            { id: 13, name: "DIY Beading Kit", description: "Perfect kit for creating your own beaded jewelry.", price: 12.00, image: "img/beadingkit.png" },
-            { id: 14, name: "Embroidery Starter Set", description: "All-in-one set for embroidery beginners.", price: 15.00, image: "img/embroidery.png" },
-            { id: 15, name: "Basic Sewing Kit", description: "Essential tools for sewing projects.", price: 10.00, image: "img/sewingkit.png" }
-        ];
+<script>
+    document.getElementById("addToCartBtn")?.addEventListener("click", function() {
+        let quantity = document.getElementById("quantity").value;
+        alert(`Added ${quantity} item(s) to the cart!`);
+    });
 
-        // (2) Retrieve the product ID from the URL, find the product, and display its details
-        function loadProductDetails() {
-            // Get the query parameter ?id=xxx
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = parseInt(urlParams.get("id"));
-
-            // Find the product with the matching id in the products array
-            const product = products.find(p => p.id === productId);
-
-            if (product) {
-                document.getElementById("productName").textContent = product.name;
-                document.getElementById("productDescription").textContent = product.description;
-                document.getElementById("productId").textContent = product.id;
-                document.getElementById("productPrice").textContent = product.price.toFixed(2);
-                document.getElementById("productImage").src = product.image;
-            } else {
-                // 万が一商品が見つからない場合
-                document.getElementById("productName").textContent = "Product Not Found";
-                document.getElementById("productDescription").textContent = "No description available.";
-                document.getElementById("productId").textContent = "N/A";
-                document.getElementById("productPrice").textContent = "0.00";
-                document.getElementById("productImage").src = "img/sample.jpg";
-            }
-        }
-
-        // (3) Initialize sample reviews
-        let reviews = [
-            { rate: 4, date: "2024-12-06", comment: "Really nice product!" },
-            { rate: 5, date: "2024-12-07", comment: "Absolutely loved it!" }
-        ];
-
-        function displayReviews() {
+    function loadReviews(productId) {
+    fetch(`get_reviews.php?item_id=${productId}`)
+        .then(response => response.json())
+        .then(reviews => {
             const reviewTable = document.getElementById("reviewTable");
-            reviewTable.innerHTML = "";  
-            
+            reviewTable.innerHTML = "";
             reviews.forEach(review => {
                 const row = document.createElement("tr");
-                row.innerHTML = `<td>${review.rate}</td><td>${review.date}</td><td>${review.comment}</td>`;
+                row.innerHTML = `<td>${review.rating}</td><td>${review.review_date}</td><td>${review.content}</td>`;
                 reviewTable.appendChild(row);
             });
-        }
+        });
+}
 
-        document.getElementById("submitReviewBtn").addEventListener("click", function() {
-            let rate = document.getElementById("reviewRate").value;
-            let comment = document.getElementById("reviewComment").value;
-            let date = new Date().toISOString().split("T")[0];
+document.getElementById("submitReviewBtn").addEventListener("click", function() {
+    let rate = document.getElementById("reviewRate").value;
+    let comment = document.getElementById("reviewComment").value;
+    let productId = document.getElementById("productId").textContent;
 
-            if (!rate || !comment) {
-                alert("Please fill out both fields.");
-                return;
-            }
+    if (!rate || !comment) {
+        alert("Please fill out both fields.");
+        return;
+    }
 
-            reviews.push({ rate, date, comment });
-            displayReviews();
-
+    fetch("add_review.php", { 
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `item_id=${productId}&rating=${rate}&content=${encodeURIComponent(comment)}`
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert("Review submitted!");
             document.getElementById("reviewRate").value = "";
             document.getElementById("reviewComment").value = "";
+            loadReviews(productId);
+        } else {
+            alert("Failed to submit review.");
+        }
+    });
+});
+
+// Call loadReviews() after loading product details:
+window.onload = function() {
+    const productId = new URLSearchParams(window.location.search).get("id");
+    loadReviews(productId);
+};
+
+
+    // Load header
+    fetch("header.php")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header").innerHTML = data;
+            let loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                document.getElementById("userLoginSection").innerHTML = 
+                    `<span>Signed in as: <b>${loggedInUser}</b> | 
+                    <a href="#" id="logoutButton">Logout</a></span>`;
+                document.getElementById("logoutButton").addEventListener("click", function() {
+                    localStorage.removeItem("loggedInUser");
+                    window.location.href = "login.php";
+                });
+            }
         });
+</script>
 
-        document.getElementById("addToCartBtn").addEventListener("click", function() {
-            let quantity = document.getElementById("quantity").value;
-            alert(`Added ${quantity} item(s) to the cart!`);
-        });
-
-        // (4) Load product details and reviews when the page is fully loaded
-        window.onload = function() {
-            loadProductDetails();
-            displayReviews();
-        };
-
-        // (5) Fetch the header
-        fetch("header.php")
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("header").innerHTML = data;
-
-                let loggedInUser = localStorage.getItem("loggedInUser");
-                if (loggedInUser) {
-                    document.getElementById("userLoginSection").innerHTML = 
-                        `<span>Signed in as: <b>${loggedInUser}</b> | 
-                        <a href="#" id="logoutButton">Logout</a></span>`;
-
-                    document.getElementById("logoutButton").addEventListener("click", function() {
-                        localStorage.removeItem("loggedInUser");
-                        window.location.href = "login.php";
-                    });
-                }
-            })
-            .catch(error => console.error("Error loading header:", error));
-    </script>
 </body>
 </html>
