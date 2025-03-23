@@ -1,5 +1,13 @@
 <?php
 session_start();
+include("config.php");
+
+$products = [];
+$query = "SELECT item_id, product_name, price, product_image FROM items";
+$result = $conn->query($query);
+while ($row = $result->fetch_assoc()) {
+    $products[] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -108,25 +116,17 @@ session_start();
     </table>
 
     <script>
-        const products = [
-            { id: 1, name: "Handmade Beaded Earrings", price: 15.00, category: "Accessories", image: "../img/earrings.png" },
-            { id: 2, name: "Leather Bracelet", price: 18.00, category: "Accessories", image: "../img/bracelet.png" },
-            { id: 3, name: "Resin Pendant Necklace", price: 22.00, category: "Accessories", image: "../img/pendant.png" },
-            { id: 4, name: "Minimalist Tote Bag", price: 25.00, category: "Lifestyle Goods", image: "../img/totebag.png" },
-            { id: 5, name: "Scented Candle", price: 12.00, category: "Lifestyle Goods", image: "../img/candle.png" },
-            { id: 6, name: "Wooden Coaster Set", price: 20.00, category: "Lifestyle Goods", image: "../img/coasters.png" },
-            { id: 7, name: "Ceramic Coffee Mug", price: 18.00, category: "Ceramics & Glass Crafts", image: "../img/coffeemug.png" },
-            { id: 8, name: "Glass Vase", price: 40.00, category: "Ceramics & Glass Crafts", image: "../img/vase.png" },
-            { id: 9, name: "Hand-Painted Plate", price: 35.00, category: "Ceramics & Glass Crafts", image: "../img/plate.png" },
-            { id: 10, name: "Knitted Scarf", price: 30.00, category: "Knitted Goods", image: "../img/scarf.png" },
-            { id: 11, name: "Wool Mittens", price: 20.00, category: "Knitted Goods", image: "../img/mittens.png" },
-            { id: 12, name: "Crocheted Beanie", price: 28.00, category: "Knitted Goods", image: "../img/beanie.png" },
-            { id: 13, name: "DIY Beading Kit", price: 12.00, category: "Craft Supplies & Tools", image: "../img/beadingkit.png" },
-            { id: 14, name: "Embroidery Starter Set", price: 15.00, category: "Craft Supplies & Tools", image: "../img/embroidery.png" },
-            { id: 15, name: "Basic Sewing Kit", price: 10.00, category: "Craft Supplies & Tools", image: "../img/sewingkit.png" }
-        ];
+        let products = [];
 
-        
+        function fetchProducts() {
+            fetch('get_products.php')
+                .then(response => response.json())
+                .then(data => {
+                    products = data;
+                    displayProducts();
+                })
+                .catch(error => console.error('Error loading products:', error));
+        }
 
         function displayProducts(filteredProducts = products) {
             const tableBody = document.getElementById("productTable");
@@ -148,24 +148,9 @@ session_start();
             });
         }
 
-        function addToCart(id, name, price) {
-            let cartKey = `cart_${id}`;
-            let existingItem = localStorage.getItem(cartKey);
-
-            if (existingItem) {
-                let itemData = existingItem.split("|");
-                let newQuantity = parseInt(itemData[2]) + 1;
-                localStorage.setItem(cartKey, `${name}|${price}|${newQuantity}`);
-            } else {
-                localStorage.setItem(cartKey, `${name}|${price}|1`);
-            }
-
-            alert(`Added "${name}" to cart!`);
-        }
-
         function filterProducts() {
             const category = document.getElementById("categoryFilter").value;
-            const searchText = document.getElementById("productSearch").value.toLowerCase().trim(); // Convert search text to lowercase
+            const searchText = document.getElementById("productSearch").value.toLowerCase().trim();
 
             const filteredProducts = products.filter(product => {
                 const matchesCategory = category === "All" || product.category === category;
@@ -182,28 +167,43 @@ session_start();
             displayProducts();
         }
 
+        function addToCart(id, name, price) {
+            let cartKey = `cart_${id}`;
+            let existingItem = localStorage.getItem(cartKey);
 
-        displayProducts();
+            if (existingItem) {
+                let itemData = existingItem.split("|");
+                let newQuantity = parseInt(itemData[2]) + 1;
+                localStorage.setItem(cartKey, `${name}|${price}|${newQuantity}`);
+            } else {
+                localStorage.setItem(cartKey, `${name}|${price}|1`);
+            }
+
+            alert(`Added "${name}" to cart!`);
+        }
+
+        fetchProducts();
 
         fetch("header.php")
             .then(response => response.text())
             .then(data => {
-            document.getElementById("header").innerHTML = data;
+                document.getElementById("header").innerHTML = data;
 
-            let loggedInUser = localStorage.getItem("loggedInUser");
-            if (loggedInUser) {
-                document.getElementById("userLoginSection").innerHTML = `
-                    <span>Signed in as: <b>${loggedInUser}</b> | 
-                    <a href="#" id="logoutButton">Logout</a></span>
-                `;
+                let loggedInUser = localStorage.getItem("loggedInUser");
+                if (loggedInUser) {
+                    document.getElementById("userLoginSection").innerHTML = `
+                        <span>Signed in as: <b>${loggedInUser}</b> | 
+                        <a href="#" id="logoutButton">Logout</a></span>
+                    `;
 
-                document.getElementById("logoutButton").addEventListener("click", function() {
-                    localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.php";
-                });
-            }
-        })
-        .catch(error => console.error("Error loading header:", error));
+                    document.getElementById("logoutButton").addEventListener("click", function() {
+                        localStorage.removeItem("loggedInUser");
+                        window.location.href = "login.php";
+                    });
+                }
+            })
+            .catch(error => console.error("Error loading header:", error));
+
     </script>
 
 </body>

@@ -164,7 +164,8 @@ if ($item_id > 0) {
         <h2><?php echo htmlspecialchars($product['product_name']); ?></h2>
 
         <!-- Product Image (Optional: change based on product name) -->
-        <img id="productImage" src="img/<?php echo htmlspecialchars($product['product_name']); ?>.png" alt="Product Image" class="product-img" onerror="this.onerror=null;this.src='img/sample.jpg';">
+        <img id="productImage" src="../img/<?php echo htmlspecialchars($product['product_image']); ?>" alt="Product Image" class="product-img" onerror="this.onerror=null;this.src='../img/sample.jpg';">
+
 
         <table>
             <tr>
