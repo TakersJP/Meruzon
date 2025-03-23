@@ -22,13 +22,13 @@ session_start();
         <?php endif; ?>
     </h2>
 
-    <h2 align="center"><a href="listprod.html">Begin Shopping</a></h2>
+    <h2 align="center"><a href="listprod.php">Begin Shopping</a></h2>
 
-    <h2 align="center"><a href="listorder.html">List All Orders</a></h2>
+    <h2 align="center"><a href="listorder.php">List All Orders</a></h2>
 
-    <h2 align="center"><a href="customer.html">Customer Info</a></h2>
+    <h2 align="center"><a href="customer.php">Customer Info</a></h2>
 
-    <h2 align="center"><a href="admin.html">Administrators</a></h2>
+    <h2 align="center"><a href="admin.php">Administrators</a></h2>
 
 </body>
 </html>

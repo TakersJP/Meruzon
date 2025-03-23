@@ -10,11 +10,11 @@ if (session_status() === PHP_SESSION_NONE) {
     </h1>
     <nav>
         <a href="shop.php">Home</a>
-        <a href="listprod.html">Shopping</a>
-        <a href="listorder.html">Orders</a>
-        <a href="customer.html">Customer</a>
-        <a href="admin.html">Administrators</a>
-        <a href="showcart.html">Cart</a>
+        <a href="listprod.php">Shopping</a>
+        <a href="listorder.php">Orders</a>
+        <a href="customer.php">Customer</a>
+        <a href="admin.php">Administrators</a>
+        <a href="showcart.php">Cart</a>
         <span id="userLoginSection">
         <?php if (isset($_SESSION['username'])): ?>
             <span style="color: white;">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span> |

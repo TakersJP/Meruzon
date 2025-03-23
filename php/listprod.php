@@ -1,9 +1,12 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
     <title>Meruzon</title>
 
     <style>
@@ -106,21 +109,21 @@
 
     <script>
         const products = [
-            { id: 1, name: "Handmade Beaded Earrings", price: 15.00, category: "Accessories", image: "img/earrings.png" },
-            { id: 2, name: "Leather Bracelet", price: 18.00, category: "Accessories", image: "img/bracelet.png" },
-            { id: 3, name: "Resin Pendant Necklace", price: 22.00, category: "Accessories", image: "img/pendant.png" },
-            { id: 4, name: "Minimalist Tote Bag", price: 25.00, category: "Lifestyle Goods", image: "img/totebag.png" },
-            { id: 5, name: "Scented Candle", price: 12.00, category: "Lifestyle Goods", image: "img/candle.png" },
-            { id: 6, name: "Wooden Coaster Set", price: 20.00, category: "Lifestyle Goods", image: "img/coasters.png" },
-            { id: 7, name: "Ceramic Coffee Mug", price: 18.00, category: "Ceramics & Glass Crafts", image: "img/coffeemug.png" },
-            { id: 8, name: "Glass Vase", price: 40.00, category: "Ceramics & Glass Crafts", image: "img/vase.png" },
-            { id: 9, name: "Hand-Painted Plate", price: 35.00, category: "Ceramics & Glass Crafts", image: "img/plate.png" },
-            { id: 10, name: "Knitted Scarf", price: 30.00, category: "Knitted Goods", image: "img/scarf.png" },
-            { id: 11, name: "Wool Mittens", price: 20.00, category: "Knitted Goods", image: "img/mittens.png" },
-            { id: 12, name: "Crocheted Beanie", price: 28.00, category: "Knitted Goods", image: "img/beanie.png" },
-            { id: 13, name: "DIY Beading Kit", price: 12.00, category: "Craft Supplies & Tools", image: "img/beadingkit.png" },
-            { id: 14, name: "Embroidery Starter Set", price: 15.00, category: "Craft Supplies & Tools", image: "img/embroidery.png" },
-            { id: 15, name: "Basic Sewing Kit", price: 10.00, category: "Craft Supplies & Tools", image: "img/sewingkit.png" }
+            { id: 1, name: "Handmade Beaded Earrings", price: 15.00, category: "Accessories", image: "../img/earrings.png" },
+            { id: 2, name: "Leather Bracelet", price: 18.00, category: "Accessories", image: "../img/bracelet.png" },
+            { id: 3, name: "Resin Pendant Necklace", price: 22.00, category: "Accessories", image: "../img/pendant.png" },
+            { id: 4, name: "Minimalist Tote Bag", price: 25.00, category: "Lifestyle Goods", image: "../img/totebag.png" },
+            { id: 5, name: "Scented Candle", price: 12.00, category: "Lifestyle Goods", image: "../img/candle.png" },
+            { id: 6, name: "Wooden Coaster Set", price: 20.00, category: "Lifestyle Goods", image: "../img/coasters.png" },
+            { id: 7, name: "Ceramic Coffee Mug", price: 18.00, category: "Ceramics & Glass Crafts", image: "../img/coffeemug.png" },
+            { id: 8, name: "Glass Vase", price: 40.00, category: "Ceramics & Glass Crafts", image: "../img/vase.png" },
+            { id: 9, name: "Hand-Painted Plate", price: 35.00, category: "Ceramics & Glass Crafts", image: "../img/plate.png" },
+            { id: 10, name: "Knitted Scarf", price: 30.00, category: "Knitted Goods", image: "../img/scarf.png" },
+            { id: 11, name: "Wool Mittens", price: 20.00, category: "Knitted Goods", image: "../img/mittens.png" },
+            { id: 12, name: "Crocheted Beanie", price: 28.00, category: "Knitted Goods", image: "../img/beanie.png" },
+            { id: 13, name: "DIY Beading Kit", price: 12.00, category: "Craft Supplies & Tools", image: "../img/beadingkit.png" },
+            { id: 14, name: "Embroidery Starter Set", price: 15.00, category: "Craft Supplies & Tools", image: "../img/embroidery.png" },
+            { id: 15, name: "Basic Sewing Kit", price: 10.00, category: "Craft Supplies & Tools", image: "../img/sewingkit.png" }
         ];
 
         
@@ -182,7 +185,7 @@
 
         displayProducts();
 
-        fetch("header.html")
+        fetch("header.php")
             .then(response => response.text())
             .then(data => {
             document.getElementById("header").innerHTML = data;
@@ -196,7 +199,7 @@
 
                 document.getElementById("logoutButton").addEventListener("click", function() {
                     localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.html";
+                    window.location.href = "login.php";
                 });
             }
         })
