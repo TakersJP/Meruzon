@@ -1,3 +1,22 @@
+<?php
+session_start();
+include 'config.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT * FROM users WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+$stmt->close();
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,63 +67,48 @@
             background-color: #7FBFB0;
             color: white;
         }
+        img.profile-pic {
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        margin-bottom: 20px;
+        border: 2px solid #ccc;
+        }
     </style>
 </head>
 <body>
 
-    <div id="header"></div>
+<?php include 'header.php'; ?>
 
-    <div class="container">
-        <h1>Customer Profile</h1>
+<div class="container">
+    <h1>Customer Profile</h1>
 
-        <table>
-            <tr><th>ID</th><td id="customerId">N/A</td></tr>
-            <tr><th>First Name</th><td id="firstName">N/A</td></tr>
-            <tr><th>Last Name</th><td id="lastName">N/A</td></tr>
-            <tr><th>Email</th><td id="email">N/A</td></tr>
-            <tr><th>Phone</th><td id="phone">N/A</td></tr>
-            <tr><th>Address</th><td id="address">N/A</td></tr>
-            <tr><th>City</th><td id="city">N/A</td></tr>
-            <tr><th>State</th><td id="state">N/A</td></tr>
-            <tr><th>Postal Code</th><td id="postalCode">N/A</td></tr>
-            <tr><th>Country</th><td id="country">N/A</td></tr>
-            <tr><th>User ID</th><td id="userId">N/A</td></tr>
-        </table>
-    </div>
+    <form action="update_profile_image.php" method="post" enctype="multipart/form-data" style="margin-top: 20px;">
+        <input type="file" name="newProfileImage" accept="image/*" required>
+        <button type="submit">Update Profile Image</button>
+    </form>
 
-    <script>
-        fetch("header.php")
-            .then(response => response.text())
-            .then(data => {
-            document.getElementById("header").innerHTML = data;
+    <?php if (!empty($user['profile_image']) && file_exists($user['profile_image'])): ?>
+        <img src="<?php echo htmlspecialchars($user['profile_image']); ?>" alt="Profile Image" class="profile-pic">
+    <?php else: ?>
+        <img src="../img/default-profile.png" alt="Default Profile" class="profile-pic">
+    <?php endif; ?>
 
-            let loggedInUser = localStorage.getItem("loggedInUser");
-            if (loggedInUser) {
-                document.getElementById("userLoginSection").innerHTML = `
-                    <span>Signed in as: <b>${loggedInUser}</b> | 
-                    <a href="#" id="logoutButton">Logout</a></span>
-                `;
-
-                document.getElementById("logoutButton").addEventListener("click", function() {
-                    localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.php";
-                });
-            }
-        })
-        .catch(error => console.error("Error loading header:", error));
-        document.addEventListener("DOMContentLoaded", function() {
-            let fields = ["customerId", "firstName", "lastName", "email", "phone", 
-                          "address", "city", "state", "postalCode", "country"];
-
-            fields.forEach(field => {
-                let value = localStorage.getItem(`user_${field}`);
-                document.getElementById(field).textContent = value ? value : "N/A";
-            });
-
-            let username = localStorage.getItem("user_username");
-            document.getElementById("userId").textContent = username ? username : "N/A";
-        });
-    </script>
+    <table>
+        <tr><th>ID</th><td><?php echo htmlspecialchars($user['user_id']); ?></td></tr>
+        <tr><th>First Name</th><td><?php echo htmlspecialchars($user['first_name']); ?></td></tr>
+        <tr><th>Last Name</th><td><?php echo htmlspecialchars($user['last_name']); ?></td></tr>
+        <tr><th>Email</th><td><?php echo htmlspecialchars($user['email']); ?></td></tr>
+        <tr><th>Phone</th><td><?php echo htmlspecialchars($user['phone']); ?></td></tr>
+        <tr><th>Address</th><td><?php echo htmlspecialchars($user['address']); ?></td></tr>
+        <tr><th>City</th><td><?php echo htmlspecialchars($user['city']); ?></td></tr>
+        <tr><th>State</th><td><?php echo htmlspecialchars($user['state']); ?></td></tr>
+        <tr><th>Postal Code</th><td><?php echo htmlspecialchars($user['postal_code']); ?></td></tr>
+        <tr><th>Country</th><td><?php echo htmlspecialchars($user['country']); ?></td></tr>
+        <tr><th>Username</th><td><?php echo htmlspecialchars($user['username']); ?></td></tr>
+    </table>
+</div>
 
 </body>
 </html>
