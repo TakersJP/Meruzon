@@ -153,7 +153,7 @@ if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is
     </div>
 
     <div class="footer-link">
-    <a href="../index.php">Return to Home Page</a>
+    <a href="admin.php">Return to Home Page</a>
     </div>
 
 </body>
