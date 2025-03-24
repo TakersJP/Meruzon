@@ -137,6 +137,16 @@ if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is
         <button onclick="location.href='manage_products.php'">Go to Product Management</button>
         </div>
     </div>
+
+    <!-- Review management card -->
+    <div class="admin-card">
+        <div class="admin-card-content">
+        <h2>Manage Reviews</h2>
+        <p>View and delete user reviews.</p>
+        <button onclick="location.href='manage_reviews.php'">Go to Review Management</button>
+        </div>
+    </div>
+
     
     <!-- If more features, add more cards here
     <div class="admin-card">
