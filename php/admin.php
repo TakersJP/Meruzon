@@ -1,228 +1,173 @@
+<?php
+session_start();
+
+// Check admin session
+if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+    header("Location: login.php");
+    exit();
+}
+
+// DB connection
+require_once '../config.php';
+
+// 1) Get daily sales summary from orders table
+//    - Group by the date part of order_date
+//    - Summation of total_amount
+$salesSql = "
+    SELECT 
+        DATE(order_date) AS order_date,
+        SUM(total_amount) AS daily_total
+    FROM orders
+    GROUP BY DATE(order_date)
+    ORDER BY order_date DESC
+";
+$salesResult = $conn->query($salesSql);
+$salesData = [];
+if ($salesResult) {
+    while ($row = $salesResult->fetch_assoc()) {
+        // Each $row might look like: [ 'order_date' => '2025-03-22', 'daily_total' => '12.34' ]
+        $salesData[] = $row;
+    }
+}
+
+// 2) Get all users (or only non-admin users) from users table
+$usersSql = "
+    SELECT user_id, username, first_name, last_name, email, is_admin
+    FROM users
+    ORDER BY user_id ASC
+";
+$usersResult = $conn->query($usersSql);
+$usersData = [];
+if ($usersResult) {
+    while ($row = $usersResult->fetch_assoc()) {
+        // e.g. [ 'user_id'=>1, 'username'=>'bob', 'first_name'=>'Bob', 'is_admin'=>0, ... ]
+        $usersData[] = $row;
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrator Page</title>
-    <link href="../css/style.css" rel="stylesheet">
-
+    <title>Administrator Dashboard</title>
     <style>
         body {
             font-family: Georgia, serif;
             margin: 20px;
-            text-align: center;
             background-color: #f9f9f9;
-            color: black;
         }
-
+        h1 {
+            text-align: center;
+        }
         .container {
             width: 90%;
             margin: 40px auto;
-            display: flex;
-            justify-content: space-between;
-            gap: 30px;
         }
-
-        .table-container {
-            width: 48%;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            font-size: 22px;
-            color: black;
-            text-align: center;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
             background-color: #F2F2F2;
-            margin-top: 10px;
-            text-align: left;
+            margin-bottom: 40px;
         }
-
         th, td {
             border: 1px solid #dddddd;
             padding: 8px;
             color: black;
         }
-
         th {
             background-color: #7FBFB0;
             color: white;
         }
-
-        .error-message {
-            color: red;
-            font-weight: bold;
+        .section-title {
+            margin-top: 40px;
+            font-size: 22px;
+            color: #333;
+            text-align: left;
+            padding: 10px 0;
         }
-
-        .hidden {
-            display: none;
-        }
-
-        .password-box {
-            width: 300px;
-            margin: 100px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .password-box input {
-            width: 80%;
-            padding: 8px;
-            margin-top: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .password-box button {
-            margin-top: 10px;
-            padding: 8px 15px;
-            background-color: #7FBFB0;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .password-box button:hover {
-            background-color: #66A099;
+        .table-wrapper {
+            margin-bottom: 40px;
         }
     </style>
 </head>
 <body>
 
-    <div id="header"></div>
+<div class="container">
+    
+    <h1>Administrator Dashboard</h1>
 
-    <!-- Password meruzon_admin -->
-    <div id="passwordPrompt" class="password-box">
-        <h2>Admin Access Required</h2>
-        <p>Enter the admin password to access this page:</p>
-        <input type="password" id="adminPassword" placeholder="Enter Password">
-        <button onclick="checkAdminAccess()">Submit</button>
-        <p id="errorMessage" class="error-message hidden">Incorrect password. Try again.</p>
-    </div>
-
-    <div class="container hidden" id="adminContent">
-        <div class="table-container">
-            <h1>Administrator Sales Report by Day</h1>
-            <table id="salesReportTable">
-                <thead>
-                    <tr>
-                        <th>Order Date</th>
-                        <th>Total Order Amount</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-                <tfoot>
-                    <tr>
-                        <th>Total</th>
-                        <td id="totalSales" style="text-align: right;">$0.00</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-
-        <div class="table-container">
-            <h1>Customer List</h1>
-            <table id="customerListTable">
-                <thead>
-                    <tr>
-                        <th>Customer ID</th>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-
-    <script>
-        function checkAdminAccess() {
-            let enteredPassword = document.getElementById("adminPassword").value;
-            const correctPassword = "meruzon_admin";
-
-            if (enteredPassword === correctPassword) {
-                document.getElementById("passwordPrompt").classList.add("hidden");
-                document.getElementById("adminContent").classList.remove("hidden");
-            } else {
-                document.getElementById("errorMessage").classList.remove("hidden");
+    <!-- Sales Report Table -->
+    <div class="table-wrapper">
+        <div class="section-title">Sales Report (by Day)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order Date</th>
+                    <th>Total Amount (Daily)</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            $grandTotal = 0.0;
+            foreach ($salesData as $row) {
+                $date = htmlspecialchars($row['order_date']);
+                $dailyTotal = (float) $row['daily_total'];
+                $grandTotal += $dailyTotal;
+                echo "<tr>";
+                echo "<td>{$date}</td>";
+                echo "<td style='text-align:right;'>\$" . number_format($dailyTotal, 2) . "</td>";
+                echo "</tr>";
             }
-        }
+            ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th style="text-align:left;">Grand Total</th>
+                    <th style="text-align:right;">
+                        $<?php echo number_format($grandTotal, 2); ?>
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 
-        document.addEventListener("DOMContentLoaded", function () {
+    <!-- Users Table -->
+    <div class="table-wrapper">
+        <div class="section-title">User List</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Admin?</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            foreach ($usersData as $user) {
+                $uid       = htmlspecialchars($user['user_id']);
+                $username  = htmlspecialchars($user['username']);
+                $fullName  = htmlspecialchars($user['first_name'] . ' ' . $user['last_name']);
+                $email     = htmlspecialchars($user['email']);
+                $isAdmin   = $user['is_admin'] ? "Yes" : "No";
 
-            localStorage.removeItem("adminAccess"); 
+                echo "<tr>";
+                echo "<td>{$uid}</td>";
+                echo "<td>{$username}</td>";
+                echo "<td>{$fullName}</td>";
+                echo "<td>{$email}</td>";
+                echo "<td>{$isAdmin}</td>";
+                echo "</tr>";
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
 
-            let salesData = [
-                { date: "2025-02-25", total: 250.75 },
-                { date: "2025-02-26", total: 400.20 },
-                { date: "2025-02-27", total: 150.50 }
-            ];
-
-            let customerData = [
-                { id: 101, firstName: "John", lastName: "Doe" },
-                { id: 102, firstName: "Jane", lastName: "Smith" },
-                { id: 103, firstName: "Alice", lastName: "Johnson" }
-            ];
-
-            let salesTableBody = document.querySelector("#salesReportTable tbody");
-            let totalSales = 0;
-
-            salesData.forEach(sale => {
-                let row = `
-                    <tr>
-                        <td>${sale.date}</td>
-                        <td style="text-align: right;">$${sale.total.toFixed(2)}</td>
-                    </tr>
-                `;
-                salesTableBody.innerHTML += row;
-                totalSales += sale.total;
-            });
-
-            document.getElementById("totalSales").textContent = `$${totalSales.toFixed(2)}`;
-
-            let customerTableBody = document.querySelector("#customerListTable tbody");
-
-            customerData.forEach(customer => {
-                let row = `
-                    <tr>
-                        <td>${customer.id}</td>
-                        <td>${customer.firstName} ${customer.lastName}</td>
-                    </tr>
-                `;
-                customerTableBody.innerHTML += row;
-            });
-        });
-
-        fetch("header.php")
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("header").innerHTML = data;
-
-                let loggedInUser = localStorage.getItem("loggedInUser");
-                if (loggedInUser) {
-                    document.getElementById("userLoginSection").innerHTML = `
-                        <span>Signed in as: <b>${loggedInUser}</b> | 
-                        <a href="#" id="logoutButton">Logout</a></span>
-                    `;
-
-                    document.getElementById("logoutButton").addEventListener("click", function () {
-                        localStorage.removeItem("loggedInUser");
-                        localStorage.removeItem("adminAccess"); // Clear admin access on logout
-                        window.location.href = "login.php";
-                    });
-                }
-            })
-            .catch(error => console.error("Error loading header:", error));
-    </script>
+</div>
 
 </body>
 </html>
