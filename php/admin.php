@@ -126,7 +126,7 @@ if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is
         <div class="admin-card-content">
         <h2>Manage Users</h2>
         <p>Search users by name, delete or update user info.</p>
-        <button onclick="location.href='users.php'">Go to User Management</button>
+        <button onclick="location.href='managge_users.php'">Go to User Management</button>
         </div>
     </div>
 
@@ -136,7 +136,7 @@ if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is
         <div class="admin-card-content">
         <h2>Manage Products</h2>
         <p>Update, rename, or delete product listings.</p>
-        <button onclick="location.href='products.php'">Go to Product Management</button>
+        <button onclick="location.href='manage_items.php'">Go to Product Management</button>
         </div>
     </div>
     
