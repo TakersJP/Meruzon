@@ -11,16 +11,23 @@ require_once 'config.php';
 // Retrieve the search keyword (if any)
 $search = isset($_GET['q']) ? trim($_GET['q']) : '';
 
-// Prepare SQL to search by username or first_name/last_name
+// Prepare SQL to search by username, first_name, last_name, or email
 $sql = "
     SELECT user_id, username, first_name, last_name, email, is_admin
     FROM users
-    WHERE (username LIKE ? OR first_name LIKE ? OR last_name LIKE ?)
+    WHERE (
+        username LIKE ? 
+        OR first_name LIKE ? 
+        OR last_name LIKE ?
+        OR email LIKE ?
+    )
     ORDER BY user_id
 ";
+
 $stmt = $conn->prepare($sql);
 $likeTerm = '%' . $search . '%';
-$stmt->bind_param('sss', $likeTerm, $likeTerm, $likeTerm);
+// We now have four placeholders, so we bind four parameters
+$stmt->bind_param('ssss', $likeTerm, $likeTerm, $likeTerm, $likeTerm);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -80,9 +87,10 @@ $result = $stmt->get_result();
 
 <div class="search-form">
     <form method="GET" action="manage_users.php">
-    <input type="text" name="q" placeholder="Search by name..." 
-            value="<?php echo htmlspecialchars($search); ?>">
-    <button type="submit">Search</button>
+        <!-- Update the placeholder to indicate name or email -->
+        <input type="text" name="q" placeholder="Search by name or email..." 
+                value="<?php echo htmlspecialchars($search); ?>">
+        <button type="submit">Search</button>
     </form>
 </div>
 
@@ -99,28 +107,28 @@ $result = $stmt->get_result();
     </thead>
     <tbody>
     <?php while ($row = $result->fetch_assoc()): ?>
-    <?php
-        $uid = $row['user_id'];
-        $username = htmlspecialchars($row['username']);
-        $fullName = htmlspecialchars($row['first_name'] . ' ' . $row['last_name']);
-        $email = htmlspecialchars($row['email']);
-        $isAdmin = $row['is_admin'] ? 'Yes' : 'No';
-    ?>
-    <tr>
-        <td><?php echo $uid; ?></td>
-        <td><?php echo $username; ?></td>
-        <td><?php echo $fullName; ?></td>
-        <td><?php echo $email; ?></td>
-        <td><?php echo $isAdmin; ?></td>
-        <td>
-        <!-- Delete link calls delete_user.php?user_id=xxx -->
-        <a class="action-link" 
-            href="delete_user.php?user_id=<?php echo $uid; ?>"
-            onclick="return confirm('Are you sure you want to delete this user?');">
-            Delete
-        </a>
-        </td>
-    </tr>
+        <?php
+            $uid = $row['user_id'];
+            $username = htmlspecialchars($row['username']);
+            $fullName = htmlspecialchars($row['first_name'] . ' ' . $row['last_name']);
+            $email = htmlspecialchars($row['email']);
+            $isAdmin = $row['is_admin'] ? 'Yes' : 'No';
+        ?>
+        <tr>
+            <td><?php echo $uid; ?></td>
+            <td><?php echo $username; ?></td>
+            <td><?php echo $fullName; ?></td>
+            <td><?php echo $email; ?></td>
+            <td><?php echo $isAdmin; ?></td>
+            <td>
+                <!-- Delete link calls delete_user.php?user_id=xxx -->
+                <a class="action-link" 
+                    href="delete_user.php?user_id=<?php echo $uid; ?>"
+                    onclick="return confirm('Are you sure you want to delete this user?');">
+                    Delete
+                </a>
+            </td>
+        </tr>
     <?php endwhile; ?>
     </tbody>
 </table>
