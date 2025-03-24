@@ -118,7 +118,7 @@ $result = $stmt->get_result();
         $pname  = htmlspecialchars($row['product_name']);
         $price  = htmlspecialchars($row['price']);
         $qty    = htmlspecialchars($row['quantity']);
-      $img    = htmlspecialchars($row['product_image']); // path or filename
+    //   $img    = htmlspecialchars($row['product_image']); // path or filename
     ?>
     <tr>
         <td><?php echo $itemId; ?></td>

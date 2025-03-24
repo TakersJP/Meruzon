@@ -121,8 +121,6 @@ if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is
     <div class="container">
     <!-- User management card -->
     <div class="admin-card">
-        <!-- You can add an image if you want. Remove this tag if not needed. -->
-        <img src="../images/users.jpg" alt="Manage Users"> 
         <div class="admin-card-content">
         <h2>Manage Users</h2>
         <p>Search users by name, delete or update user info.</p>
@@ -132,7 +130,6 @@ if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is
 
     <!-- Product management card -->
     <div class="admin-card">
-        <img src="../images/products.jpg" alt="Manage Products">
         <div class="admin-card-content">
         <h2>Manage Products</h2>
         <p>Update, rename, or delete product listings.</p>
@@ -140,7 +137,7 @@ if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is
         </div>
     </div>
     
-    <!-- If more features, add more cards here
+    <!-- If more features, add more cards here later
     <div class="admin-card">
         <img src="../images/orders.jpg" alt="Manage Orders">
         <div class="admin-card-content">
