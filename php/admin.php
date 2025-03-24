@@ -2,7 +2,7 @@
 session_start();
 // Check if the user is logged in and has admin privileges
 if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
-    header("Location: ../login.php");
+    header("Location: login.php");
     exit();
 }
 ?>
@@ -121,6 +121,7 @@ if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is
     <div class="container">
     <!-- User management card -->
     <div class="admin-card">
+        <!-- You can add an image if you want. Remove this tag if not needed. -->
         <div class="admin-card-content">
         <h2>Manage Users</h2>
         <p>Search users by name, delete or update user info.</p>
@@ -133,11 +134,11 @@ if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is
         <div class="admin-card-content">
         <h2>Manage Products</h2>
         <p>Update, rename, or delete product listings.</p>
-        <button onclick="location.href='manage_items.php'">Go to Product Management</button>
+        <button onclick="location.href='manage_products.php'">Go to Product Management</button>
         </div>
     </div>
     
-    <!-- If more features, add more cards here later
+    <!-- If more features, add more cards here
     <div class="admin-card">
         <img src="../images/orders.jpg" alt="Manage Orders">
         <div class="admin-card-content">
@@ -150,7 +151,7 @@ if (empty($_SESSION['user_id']) || empty($_SESSION['is_admin']) || $_SESSION['is
     </div>
 
     <div class="footer-link">
-    <a href="admin.php">Return to Home Page</a>
+    <a href="shop.php">Return to Home Page</a>
     </div>
 
 </body>
