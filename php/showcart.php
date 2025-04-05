@@ -1,3 +1,56 @@
+<?php
+session_start();
+include 'config.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+
+$stmt = $conn->prepare("
+    SELECT i.item_id, i.product_name, i.price, c.quantity
+    FROM cart c
+    JOIN items i ON c.item_id = i.item_id
+    WHERE c.user_id = ?
+");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$cart_rows = "";
+$total = 0;
+
+while ($row = $result->fetch_assoc()) {
+    $subtotal = $row['price'] * $row['quantity'];
+    $total += $subtotal;
+    $cart_rows .= "<tr>
+        <td>{$row['product_name']}</td>
+        <td>
+            <input type='number' 
+                value='{$row['quantity']}' 
+                min='1' 
+                style='width: 60px;' 
+                onchange='updateQuantity({$row['item_id']}, this.value)'>
+        </td>
+
+        <td>\${$row['price']}</td>
+        <td>\$" . number_format($subtotal, 2) . "</td>
+        <td>
+            <form method='post' action='remove_from_cart.php'>
+                <input type='hidden' name='item_id' value='{$row['item_id']}'>
+                <button class='remove-btn' type='submit'>Remove</button>
+            </form>
+        </td>
+    </tr>";
+}
+
+
+$stmt->close();
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,81 +123,46 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody id="cartTableBody"></tbody>
+        <tbody>
+            <?php echo $cart_rows ?: "<tr><td colspan='5'>Your cart is empty.</td></tr>"; ?>
+        </tbody>
         <tfoot>
             <tr>
                 <td colspan="3" align="right"><b>Order Total</b></td>
-                <td align="right" id="cartTotal">$0.00</td>
+                <td align="right"><b>$<?php echo number_format($total, 2); ?></b></td>
+                <td></td>
             </tr>
         </tfoot>
     </table>
 
+    <h2 class="hd-h2"><a href="checkout.php">Check Out</a></h2>
+    <h2 class="hd-h2"><a href="listprod.php">Continue Shopping</a></h2>
 
     <script>
-        function loadCart() {
-            let cartTableBody = document.getElementById("cartTableBody");
-            let cartTotal = document.getElementById("cartTotal");
-            let totalAmount = 0;
-
-            cartTableBody.innerHTML = "";
-
-            for (let i = 0; i < localStorage.length; i++) {
-                let key = localStorage.key(i);
-                if (key.startsWith("cart_")) {
-                    let [name, price, quantity] = localStorage.getItem(key).split("|");
-                    price = parseFloat(price);
-                    quantity = parseInt(quantity);
-
-                    let row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${name}</td>
-                        <td>${quantity}</td>
-                        <td>$${price.toFixed(2)}</td>
-                        <td>$${(price * quantity).toFixed(2)}</td>
-                        <td>
-                            <button class="remove-btn" onclick="removeFromCart('${key}')">Remove</button>
-                        </td>
-                    `;
-                    cartTableBody.appendChild(row);
-                    totalAmount += price * quantity;
-                }
-            }
-
-            cartTotal.textContent = `$${totalAmount.toFixed(2)}`;
-        }
-
-        function removeFromCart(key) {
-            localStorage.removeItem(key);
-            loadCart();
-        }
-
-        loadCart();
-
         fetch("header.php")
             .then(response => response.text())
             .then(data => {
-            document.getElementById("header").innerHTML = data;
+                document.getElementById("header").innerHTML = data;
+            })
+            .catch(error => console.error("Error loading header:", error));
 
-            let loggedInUser = localStorage.getItem("loggedInUser");
-            if (loggedInUser) {
-                document.getElementById("userLoginSection").innerHTML = `
-                    <span>Signed in as: <b>${loggedInUser}</b> | 
-                    <a href="#" id="logoutButton">Logout</a></span>
-                `;
-
-                document.getElementById("logoutButton").addEventListener("click", function() {
-                    localStorage.removeItem("loggedInUser");
-                    window.location.href = "login.php";
-                });
-            }
-        })
-        .catch(error => console.error("Error loading header:", error));
-
+        function updateQuantity(itemId, newQuantity) {
+            fetch('update_cart_ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `item_id=${itemId}&quantity=${newQuantity}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Optionally reload or update subtotal/order total here
+                location.reload(); // Reload to reflect updated subtotal/total
+            })
+            .catch(err => {
+                console.error("Error updating quantity:", err);
+            });
+        }
     </script>
-
-    <h2 class=hd-h2><a href="checkout.php">Check Out</a></h2>
-
-    <h2 class=hd-h2><a href="listprod.php">Continue Shopping</a></h2>
-
 </body>
 </html>

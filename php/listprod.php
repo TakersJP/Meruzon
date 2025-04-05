@@ -168,19 +168,25 @@ while ($row = $result->fetch_assoc()) {
         }
 
         function addToCart(id, name, price) {
-            let cartKey = `cart_${id}`;
-            let existingItem = localStorage.getItem(cartKey);
-
-            if (existingItem) {
-                let itemData = existingItem.split("|");
-                let newQuantity = parseInt(itemData[2]) + 1;
-                localStorage.setItem(cartKey, `${name}|${price}|${newQuantity}`);
-            } else {
-                localStorage.setItem(cartKey, `${name}|${price}|1`);
-            }
-
-            alert(`Added "${name}" to cart!`);
+            fetch('add_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `item_id=${id}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Redirect to the shopping cart page after success
+                window.location.href = "showcart.php";
+            })
+            .catch(error => {
+                alert("Error adding to cart");
+                console.error(error);
+            });
         }
+
+
 
         fetchProducts();
 
