@@ -222,10 +222,30 @@ if ($item_id > 0) {
 </div>
 
 <script>
-    document.getElementById("addToCartBtn")?.addEventListener("click", function() {
-        let quantity = document.getElementById("quantity").value;
-        alert(`Added ${quantity} item(s) to the cart!`);
+    document.getElementById("addToCartBtn")?.addEventListener("click", function () {
+    const itemId = document.getElementById("productId").textContent;
+    const quantity = parseInt(document.getElementById("quantity").value);
+
+    fetch("add_cart.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `item_id=${itemId}&quantity=${quantity}`
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Failed to add to cart.");
+        return response.text();
+    })
+    .then(result => {
+        // Redirect to cart if successful
+        window.location.href = "showcart.php";
+    })
+    .catch(error => {
+        alert("Error: " + error.message);
     });
+});
+
 
     function loadReviews(productId) {
     fetch(`get_reviews.php?item_id=${productId}`)
@@ -261,7 +281,6 @@ document.getElementById("submitReviewBtn").addEventListener("click", function() 
     .then(response => response.json())
     .then(result => {
         if (result.success) {
-            alert("Review submitted!");
             document.getElementById("reviewRate").value = "";
             document.getElementById("reviewComment").value = "";
             loadReviews(productId);
