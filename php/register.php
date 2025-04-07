@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include 'config.php';
+$errorMsg = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $firstName = $_POST['firstName'];
@@ -33,18 +34,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         move_uploaded_file($_FILES["profileImage"]["tmp_name"], $profileImageName);
     }
 
+    try {
+
     $stmt = $conn->prepare("INSERT INTO users (username, password, first_name, last_name, email, phone, address, city, state, postal_code, country, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    //$stmt = $conn->prepare("INSERT INTO test_table (username) VALUES (?)");
+    //$stmt = $conn->prepare("INSERT INTO users SET username = ?"); // invalid for `prepare`
+
+
+    if (!$stmt) {
+        throw new Exception("Database prepare failed: " . $conn->error);
+    }
+
     $stmt->bind_param("ssssssssssss", $username, $hashed_password, $firstName, $lastName, $email, $phone, $address, $city, $state, $postalCode, $country, $profileImageName);
 
-    if ($stmt->execute()) {
-        header("Location: login.php");
-        exit();
-    } else {
-        $errorMsg = "Error: " . $stmt->error;
+    // Execute statement
+    if (!$stmt->execute()) {
+        // If there’s a specific duplicate error (e.g., username/email)
+        if ($stmt->errno === 1062) {
+            throw new Exception("Username or email already exists. Please choose another one.");
+        } else {
+            throw new Exception("Database execute failed: " . $stmt->error);
+        }
     }
 
     $stmt->close();
     $conn->close();
+
+    header("Location: login.php");
+    exit();
+
+    }catch (Exception $e){
+        $errorMsg = $e->getMessage();
+    }
+
+
+    // if ($stmt->execute()) {
+    //     header("Location: login.php");
+    //     exit();
+    // } else {
+    //     $errorMsg = "Error: " . $stmt->error;
+    // }
+
+    // $stmt->close();
+    // $conn->close();
 }
 ?>
 
