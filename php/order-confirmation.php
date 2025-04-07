@@ -1,3 +1,46 @@
+<?php
+session_start();
+include 'config.php'; // make sure this defines $conn
+
+if (!isset($_SESSION['user_id']) || !isset($_GET['order_id'])) {
+    echo "<p>No order found! Please place an order first.</p>";
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+$order_id = intval($_GET['order_id']);
+
+// Fetch order and customer info, including order_ref_num
+$stmt = $conn->prepare("
+    SELECT o.order_date, o.order_ref_num,
+           u.first_name, u.last_name
+    FROM orders o
+    JOIN users u ON o.user_id = u.user_id
+    WHERE o.order_id = ? AND o.user_id = ?
+");
+$stmt->bind_param("ii", $order_id, $user_id);
+$stmt->execute();
+$order_result = $stmt->get_result();
+
+if (!$order = $order_result->fetch_assoc()) {
+    echo "<p>No order found! Please place an order first.</p>";
+    exit();
+}
+
+// Fetch ordered items
+$stmt_items = $conn->prepare("
+    SELECT i.item_id, i.product_name, i.price, oi.quantity, (i.price * oi.quantity) AS subtotal
+    FROM order_items oi
+    JOIN items i ON oi.product_id = i.item_id
+    WHERE oi.order_id = ?
+");
+$stmt_items->bind_param("i", $order_id);
+$stmt_items->execute();
+$items_result = $stmt_items->get_result();
+
+$order_total = 0;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,126 +122,60 @@
     </style>
 </head>
 <body>
+  <div id="header"></div>
+  <div class="container">
+    <h1>Your Order Summary</h1>
+    <table id="orderTable">
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Product Name</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php while ($item = $items_result->fetch_assoc()): 
+          $subtotal = $item['price'] * $item['quantity'];
+          $order_total += $subtotal;
+        ?>
+          <tr>
+          <td><?= htmlspecialchars($item['item_id']) ?></td>
+          <td><?= htmlspecialchars($item['product_name']) ?></td>
+          <td><?= $item['quantity'] ?></td>
+          <td align="right">$<?= number_format($item['price'], 2) ?></td>
+          <td align="right">$<?= number_format($item['subtotal'], 2) ?></td>
+          </tr>
+        <?php endwhile; ?>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4" align="right"><b>Order Total</b></td>
+          <td align="right">$<?= number_format($order_total, 2) ?></td>
+        </tr>
+      </tfoot>
+    </table>
 
-    <div id="header"></div>
-
-    <div class="container">
-        <h1>Your Order Summary</h1>
-        
-        <table id="orderTable">
-            <thead>
-                <tr>
-                    <th>Product ID</th>
-                    <th>Product Name</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4" align="right"><b>Order Total</b></td>
-                    <td align="right" id="orderTotal">$0.00</td>
-                </tr>
-            </tfoot>
-        </table>
-
-        <div class="checkout-info">
-            <p><b>Order completed. Will be delivered soon...</b></p>
-            <p>Check delivery status: <a id="deliveryLink" class="link" href="#">Track Order</a></p>
-            <p><b>Your order reference number:</b> <span id="orderId"></span></p>
-            <p><b>Delivering to customer:</b> <span id="customerId"></span></p>
-            <p><b>Name:</b> <span id="customerName"></span></p>
-        </div>
-
-        <button class="button" onclick="goBackToShop()">Return to Shop</button>
+    <div class="checkout-info">
+      <p><b>Order completed. Will be delivered soon...</b></p>
+      <p><b>Order placed on:</b> <?= htmlspecialchars($order['order_date']) ?></p>
+      <p><b>Your tracking number:</b> <?= htmlspecialchars($order['order_ref_num']) ?></p>
+      <p><b>Name:</b> <?= htmlspecialchars($order['first_name'] . ' ' . $order['last_name']) ?></p>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-        let orderData = localStorage.getItem("orderData");
-        let customerName = localStorage.getItem("customerName");
-        let customerId = localStorage.getItem("customerId");
-        let orderId = Math.floor(Math.random() * 1000000); // Simulated Order ID
+    <button class="button" onclick="goBackToShop()">Return to Shop</button>
+  </div>
 
-        let orderTableBody = document.querySelector("#orderTable tbody");
-        let orderTotalElement = document.getElementById("orderTotal");
-        let orderMessage = document.createElement("p");
-        let trackOrderLink = document.getElementById("deliveryLink");
-        let returnButton = document.querySelector(".button");
-
-        if (!orderData) {
-            orderMessage.innerHTML = "<b>No order found! Please place an order first.</b>";
-            orderMessage.style.color = "red";
-            orderMessage.style.marginTop = "20px";
-            document.querySelector(".container").appendChild(orderMessage);
-
-            trackOrderLink.style.pointerEvents = "none";
-            trackOrderLink.style.color = "gray";
-        } else {
-            let orderItems = orderData.split("|"); 
-            let orderTotal = 0;
-
-            orderTableBody.innerHTML = "";
-            orderItems.forEach(item => {
-                let details = item.split(",");
-                let productId = details[0];
-                let productName = details[1];
-                let price = parseFloat(details[2]);
-                let quantity = parseInt(details[3]);
-                let subtotal = price * quantity;
-                orderTotal += subtotal;
-
-                let row = `
-                    <tr>
-                        <td>${productId}</td>
-                        <td>${productName}</td>
-                        <td align="center">${quantity}</td>
-                        <td align="right">$${price.toFixed(2)}</td>
-                        <td align="right">$${subtotal.toFixed(2)}</td>
-                    </tr>
-                `;
-                orderTableBody.innerHTML += row;
-            });
-
-            orderTotalElement.textContent = `$${orderTotal.toFixed(2)}`;
-
-            document.getElementById("orderId").textContent = orderId;
-            document.getElementById("customerId").textContent = customerId ? customerId : "Unknown";
-            document.getElementById("customerName").textContent = customerName ? customerName : "Guest";
-            trackOrderLink.href = `ship.php?orderId=${orderId}`;
-
-            localStorage.removeItem("orderData");
-        }
-
-        returnButton.addEventListener("click", function() {
-            window.location.href = "shop.php";
-        });
-
-        fetch("header.php")
-                .then(response => response.text())
-                .then(data => {
-                document.getElementById("header").innerHTML = data;
-    
-                let loggedInUser = localStorage.getItem("loggedInUser");
-                if (loggedInUser) {
-                    document.getElementById("userLoginSection").innerHTML = `
-                        <span>Signed in as: <b>${loggedInUser}</b> | 
-                        <a href="#" id="logoutButton">Logout</a></span>
-                    `;
-    
-                   
-                    document.getElementById("logoutButton").addEventListener("click", function() {
-                        localStorage.removeItem("loggedInUser");
-                        window.location.href = "login.php"; 
-                    });
-                }
-            })
-            .catch(error => console.error("Error loading header:", error));
-        });
-
-    </script>
-
+  <script>
+    function goBackToShop() {
+      window.location.href = "shop.php";
+    }
+    // Load header
+    fetch("header.php")
+      .then(response => response.text())
+      .then(data => document.getElementById("header").innerHTML = data)
+      .catch(error => console.error("Header load failed:", error));
+  </script>
 </body>
 </html>

@@ -131,7 +131,27 @@
             localStorage.setItem("paymentExpiryDate", paymentExpiryDate);
             localStorage.setItem("orderDate", new Date().toLocaleString());
 
-            window.location.href = "order-confirmation.php";
+            fetch("process_payment.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `paymentType=${encodeURIComponent(paymentType)}&paymentNumber=${encodeURIComponent(paymentNumber)}&paymentExpiryDate=${encodeURIComponent(paymentExpiryDate)}`
+            })
+            .then(response => response.json()) // Parse as JSON
+            .then(data => {
+                if (data.success && data.order_id) {
+                    window.location.href = `order-confirmation.php?order_id=${data.order_id}`;
+                } else {
+                    errorMessage.textContent = data.message || "Something went wrong. Please try again.";
+                    errorMessage.style.display = "block";
+                }
+            })
+            .catch(error => {
+                console.error("Error submitting payment:", error);
+                errorMessage.textContent = "Error submitting payment.";
+                errorMessage.style.display = "block";
+            });
         });
 
         fetch("header.php")

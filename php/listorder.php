@@ -9,11 +9,23 @@
 
   $currentUserId = $_SESSION['user_id'];
 
-  $sql = "SELECT o.order_id, o.order_date, o.user_id, u.first_name, u.last_name, o.total_amount 
-          FROM orders o
-          JOIN users u ON o.user_id = u.user_id
-          WHERE o.user_id = ?
-          ORDER BY o.order_date DESC";
+  $sql = "
+    SELECT 
+        o.order_id,
+        oi.product_id,
+        oi.product_name,
+        o.order_date,
+        o.order_ref_num,
+        o.total_amount,
+        u.first_name,
+        u.last_name
+    FROM orders o
+    JOIN users u ON o.user_id = u.user_id
+    JOIN order_items oi ON o.order_id = oi.order_id
+    WHERE o.user_id = ?
+    ORDER BY o.order_date DESC
+  ";
+
   $stmt = $conn->prepare($sql);
   $stmt->bind_param("i", $currentUserId);
   $stmt->execute();
@@ -100,26 +112,25 @@
       <thead>
         <tr>
           <th>Order ID</th>
+          <th>Product Name</th>
           <th>Order Date</th>
-          <th>Customer ID</th>
+          <th>Tracking Number</th>
           <th>Customer Name</th>
           <th>Total Amount</th>
         </tr>
       </thead>
+
       <tbody>
-        <?php if (empty($orders)) : ?>
-          <tr><td colspan="5">No orders found.</td></tr>
-        <?php else: ?>
-          <?php foreach ($orders as $order) : ?>
-            <tr class="order-row">
-              <td><?php echo $order['order_id']; ?></td>
-              <td><?php echo $order['order_date']; ?></td>
-              <td><?php echo $order['user_id']; ?></td>
-              <td><?php echo htmlspecialchars($order['first_name'] . ' ' . $order['last_name']); ?></td>
-              <td>$<?php echo number_format($order['total_amount'], 2); ?></td>
-            </tr>
-          <?php endforeach; ?>
-        <?php endif; ?>
+      <?php foreach ($orders as $order) : ?>
+        <tr class="order-row">
+          <td><?= htmlspecialchars($order['order_id']) ?></td>
+          <td><?= htmlspecialchars($order['product_name']) ?></td>
+          <td><?= htmlspecialchars($order['order_date']) ?></td>
+          <td><?= htmlspecialchars($order['order_ref_num']) ?></td>
+          <td><?= htmlspecialchars($order['first_name'] . ' ' . $order['last_name']) ?></td>
+          <td>$<?= number_format($order['total_amount'], 2) ?></td>
+        </tr>
+      <?php endforeach; ?>
       </tbody>
     </table>
 </div>
