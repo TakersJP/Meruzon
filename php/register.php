@@ -63,7 +63,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         td input[type="text"], td input[type="password"], td input[type="email"], td input[type="file"] { width: 95%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
         .submit { background-color: #7FBFB0; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-size: 16px; cursor: pointer; }
         .submit:hover { background-color: #66A099; }
-        .field-error { color: red; font-size: 12px; font-weight: bold; }
+        .field-error {
+            display: block;
+            color: red;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -84,7 +90,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <tr><td><label for="postalCode">Postal Code:</label></td><td><input type="text" name="postalCode" id="postalCode"><span class="field-error" id="error-postalCode"></span></td></tr>
             <tr><td><label for="country">Country:</label></td><td><input type="text" name="country" id="country"><span class="field-error" id="error-country"></span></td></tr>
             <tr><td><label for="username">Username:</label></td><td><input type="text" name="username" id="username"><span class="field-error" id="error-username"></span></td></tr>
-            <tr><td><label for="password">Password:</label></td><td><input type="password" name="password" id="password"><span class="field-error" id="error-password"></span></td></tr>
+            <tr>
+                <td><label for="password">Password:</label></td>
+                <td>
+                    <input type="password" name="password" id="password">
+                    <span class="field-error" id="error-password"></span>
+                </td>
+            </tr>
         </table>
         <br/>
         <input class="submit" type="submit" value="Create Account">
