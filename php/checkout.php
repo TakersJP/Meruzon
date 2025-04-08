@@ -75,10 +75,10 @@
                             <label for="visa">VISA</label><br>
                             <input type="radio" id="master" name="paymentType" value="Mastercard" required>
                             <label for="master">Mastercard</label><br>
-                            <input type="radio" id="paypal" name="paymentType" value="PayPal" required>
-                            <label for="paypal">PayPal</label><br>
-                            <input type="radio" id="applepay" name="paymentType" value="Apple Pay" required>
-                            <label for="applepay">Apple Pay</label>
+                            <input type="radio" id="amex" name="paymentType" value="AMEX" required>
+                            <label for="amex">AMEX</label><br>
+                            <input type="radio" id="jcb" name="paymentType" value="JCB" required>
+                            <label for="jcb">JCB</label>
                         </td>
                     </tr>
                     <tr>
